@@ -28,7 +28,7 @@ const Page = () => {
                   Email
                 </p>
                 <p className="font-medium break-all">
-                  luvag0707@gmail.com
+                  rupam3059@gmail.com
                 </p>
               </div>
             </div>
@@ -40,7 +40,7 @@ const Page = () => {
                   Phone
                 </p>
                 <p className="font-medium">
-                  +91 9874448947
+                  +91 7003385269
                 </p>
               </div>
             </div>
@@ -89,7 +89,7 @@ const Page = () => {
                   </p>
 
                   <p className="text-gray-500 text-sm break-all">
-                    luvag0707@gmail.com
+                    rupam3059@gmail.com
                   </p>
                 </div>
 
@@ -109,7 +109,7 @@ const Page = () => {
                   </p>
 
                   <p className="text-gray-500 text-sm">
-                    +91 9874448947
+                    +91 7003385269
                   </p>
                 </div>
 
