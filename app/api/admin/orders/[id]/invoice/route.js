@@ -53,11 +53,11 @@ export async function GET(
             );
 
         }
-
+        const { id } = await params;
         const order =
             await Order.findById(
-                params.id
-            ); 
+                id
+            );
 
         if (!order) {
 

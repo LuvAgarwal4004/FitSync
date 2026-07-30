@@ -1,370 +1,355 @@
-"use client"
-import React from 'react'
-import { useState } from "react";
-import { useSession, signOut } from "next-auth/react"
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
-import { useCart } from "@/context/CartContext";
-import SmartLink from './SmartLink';
+import SmartLink from "./SmartLink";
 import {
-    Menu,
-    X,
-    Home,
-    Package,
-    Truck,
-    Phone,
-    Shield,
-    LogOut,
-    User
+  Menu,
+  X,
+  Home,
+  ShoppingBag,
+  ClipboardList,
+  PlusCircle,
+  User,
+  LogOut,
 } from "lucide-react";
 
-const Navbar = () => {
-    const { data: session } = useSession();
+export default function Navbar() {
+  const { data: session } = useSession();
 
-    const [open, setOpen] = useState(false);
-    const [mobileMenu, setMobileMenu] = useState(false);
-    const dropdownRef = useRef(null);
-    const [liveOrder, setLiveOrder] =
-        useState(null);
+  const [mobileMenu, setMobileMenu] = useState(false);
+  const [open, setOpen] = useState(false);
 
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setOpen(false);
-            }
-        }
+  const dropdownRef = useRef(null);
 
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
-    const { cart, animateCart, setCart } = useCart();
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setOpen(false);
+      }
+    }
 
-    useEffect(() => {
-        if (session) {
-            fetch("/api/cart/get", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                // body: JSON.stringify({
-                //     email: session.user.email
-                // })
-            })
-                .then(res => res.json())
-                .then(data => {
-                    setCart(data.cart); // IMPORTANT
-                });
-        }
-    }, [session]);
-    useEffect(() => {
+    document.addEventListener(
+      "mousedown",
+      handleClickOutside
+    );
 
-        if (session) {
+    return () =>
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
+  }, []);
 
-            fetch("/api/order/live")
-                .then(res => res.json())
-                .then(data => {
-                    setLiveOrder(data.order);
-                });
+  return (
+    <>
+      <nav className="sticky top-0 z-50 bg-[#06081f] shadow-lg">
+        <div className="mx-auto max-w-7xl px-4">
 
-        }
+          <div className="flex h-20 items-center justify-between">
 
-    }, [session]);
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenu(true)}
+              className="md:hidden text-white"
+            >
+              <Menu size={28} />
+            </button>
 
-    return (
-        <>
+            {/* Logo */}
+            <SmartLink href="/">
+              <img
+                src="/logo.jpg"
+                alt="Campus Stationery Hub"
+                className="h-14 sm:h-16 md:h-20 w-auto"
+              />
+            </SmartLink>
 
-            <nav className="relative bg-[#06081f]">
-                <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-                    <div className="relative flex h-20 items-center justify-between">
-                        <button
-                            onClick={() => setMobileMenu(true)}
-                            className="
-sm:hidden
-text-white
-mr-2
-"
-                        >
-                            <Menu size={28} />
-                        </button>
-                        <SmartLink href="/">
-                            <img src="/logo.jpg" alt="Your Company" className="
-h-16
-md:h-20
-w-auto
-transition
-" />
-                        </SmartLink>
-                        <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                            <div className="flex shrink-0 items-center">
-                            </div>
-                            <div className="hidden md:block ml-8">
-                                <div className="flex space-x-4">
+            {/* Desktop Links */}
 
-                                    <SmartLink href="#"> <span aria-current="page"
-                                        className="
-rounded-xl
-px-4
-py-2
-text-sm
-font-medium
-text-gray-300
-transition
-duration-300
-hover:bg-cyan-500/10
-hover:text-cyan-400
-">Home</span></SmartLink>
-                                    {session && (<>
-                                        {liveOrder?.length > 0 && (
-                                            <SmartLink href="/track-order">
-                                                <span className="
-rounded-md
-px-3
-py-2
-text-sm
-font-medium
-text-gray-300
-hover:bg-white/5
-hover:text-white
-">
-                                                    Track Order
-                                                </span>
-                                            </SmartLink>
-                                        )}
-                                        <SmartLink href="/my-orders">
-                                            <span className="
-rounded-xl
-px-4
-py-2
-text-sm
-font-medium
-text-gray-300
-transition
-duration-300
-hover:bg-cyan-500/10
-hover:text-cyan-400
-">My Order</span></SmartLink>
-                                    </>)}
-                                    <SmartLink href="/contact"><span
-                                        className="
-rounded-xl
-px-4
-py-2
-text-sm
-font-medium
-text-gray-300
-transition
-duration-300
-hover:bg-cyan-500/10
-hover:text-cyan-400
-">Contact</span></SmartLink>
-                                    {/* <SmartLink href="#"><span className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">More</span></SmartLink> */}
+            <div className="hidden md:flex items-center gap-2">
 
-                                    {session?.user?.role === "admin" && (
-                                        <SmartLink href="/admin">
-                                            <span
-                                                className="
-rounded-xl
-px-4
-py-2
-text-sm
-font-medium
-text-gray-300
-transition
-duration-300
-hover:bg-cyan-500/10
-hover:text-cyan-400
-">
-                                                Admin
-                                            </span>
-                                        </SmartLink>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                        {session && (
-                            <SmartLink href={"/Cart"}>
-                                <button id="cart-icon" className="relative">
-                                    <div
-                                        className={`transition-transform duration-300 ${animateCart ? "scale-220 -translate-y-1" : "scale-160"
-                                            }`}
-                                    >
-                                        🛒
-                                    </div>
+              <SmartLink href="/">
+                <span className="rounded-xl px-4 py-2 text-sm font-medium text-gray-300 transition hover:bg-cyan-500/10 hover:text-cyan-400">
+                  Home
+                </span>
+              </SmartLink>
 
-                                    {/* badge */}
-                                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 rounded-full">
-                                        {cart.length}
-                                    </span>
-                                </button>
-                            </SmartLink>
-                        )}
+              {/* <SmartLink href="/buy">
+                <span className="rounded-xl px-4 py-2 text-sm font-medium text-gray-300 transition hover:bg-cyan-500/10 hover:text-cyan-400">
+                  Buy
+                </span>
+              </SmartLink>
 
+              <SmartLink href="/rent-requests">
+                <span className="rounded-xl px-4 py-2 text-sm font-medium text-gray-300 transition hover:bg-cyan-500/10 hover:text-cyan-400">
+                  Rent Requests
+                </span>
+              </SmartLink> */}
 
+              {session && (
+                <>
+                  {/* <SmartLink href="/sell">
+                    <span className="rounded-xl px-4 py-2 text-sm font-medium text-gray-300 transition hover:bg-cyan-500/10 hover:text-cyan-400">
+                      Sell
+                    </span>
+                  </SmartLink>
 
-                        {session && (
-                            <div ref={dropdownRef} className="relative ml-3">
-                                <button
-                                    onClick={() => setOpen(!open)}
-                                    className="relative flex rounded-full focus:outline-none"
-                                >
+                  <SmartLink href="/rent">
+                    <span className="rounded-xl px-4 py-2 text-sm font-medium text-gray-300 transition hover:bg-cyan-500/10 hover:text-cyan-400">
+                      Rent
+                    </span>
+                  </SmartLink> */}
 
-                                    <Image
-                                        src={session?.user?.image || `https://api.dicebear.com/7.x/initials/png?seed=${encodeURIComponent(session?.user?.name || "User")}`}
-                                        alt="profile"
-                                        width={40}
-                                        height={40}
-                                        className="rounded-full"
-                                    />
-                                </button>
+                  <SmartLink href="/my-activity">
+                    <span className="rounded-xl px-4 py-2 text-sm font-medium text-gray-300 transition hover:bg-cyan-500/10 hover:text-cyan-400">
+                      My Activity
+                    </span>
+                  </SmartLink>
+                </>
+              )}
+            </div>
 
-                                {open && (
-                                    <div className="absolute z-10 right-0 mt-2 w-40 rounded-md bg-white py-1 shadow-lg">
-                                        {/* <SmartLink href="#"><span className="block px-4 py-2 text-sm text-gray-700
-                                     hover:bg-gray-100">
-                                        Your profile
-                                    </span>
-                                    </SmartLink> */}
+            {/* Right Side */}
 
-                                        <button
-                                            onClick={() => signOut({ callbackUrl: "/" })}
-                                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                        >
-                                            Sign out
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        )}
+            <div className="flex items-center">
 
-                        {!session && <SmartLink href={"/login"}>
-                            <button type="button" className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl rounded-lg focus:ring-4 focus:outline-none font-medium rounded-base text-sm px-4 py-2.5 text-center leading-5">Login</button>
-                        </SmartLink>}
+              {!session ? (
+                <SmartLink href="/login">
+                  <button
+                    className="
+                    rounded-xl
+                    bg-gradient-to-r
+                    from-indigo-600
+                    to-purple-600
+                    px-5
+                    py-2
+                    text-white
+                    font-semibold
+                    hover:scale-105
+                    transition
+                  "
+                  >
+                    Login
+                  </button>
+                </SmartLink>
+              ) : (
+                <div
+                  ref={dropdownRef}
+                  className="relative"
+                >
+                  <button
+                    onClick={() =>
+                      setOpen(!open)
+                    }
+                  >
+                    <Image
+                      src={
+                        session.user.image ||
+                        `https://api.dicebear.com/7.x/initials/png?seed=${encodeURIComponent(
+                          session.user.name
+                        )}`
+                      }
+                      alt="profile"
+                      width={42}
+                      height={42}
+                      className="rounded-full border-2 border-white"
+                    />
+                  </button>
+
+                  {open && (
+                    <div
+                      className="
+                      absolute
+                      right-0
+                      mt-3
+                      w-56
+                      rounded-2xl
+                      bg-white
+                      shadow-2xl
+                      overflow-hidden
+                    "
+                    >
+
+                      <div className="border-b p-4">
+
+                        <p className="font-semibold">
+                          {session.user.name}
+                        </p>
+
+                        <p className="text-sm text-gray-500">
+                          {session.user.email}
+                        </p>
+
+                      </div>
+
+                      <SmartLink
+                        href="/my-activity"
+                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100"
+                      >
+                        <User size={18} />
+                        My Activity
+                      </SmartLink>
+
+                      <button
+                        onClick={() =>
+                          signOut({
+                            callbackUrl: "/",
+                          })
+                        }
+                        className="
+                        flex
+                        w-full
+                        items-center
+                        gap-3
+                        px-4
+                        py-3
+                        text-red-600
+                        hover:bg-red-50
+                        "
+                      >
+                        <LogOut size={18} />
+                        Logout
+                      </button>
 
                     </div>
+                  )}
                 </div>
-            </nav>
-            <>
-                <div
-                    className={`
+              )}
+            </div>
+
+          </div>
+
+        </div>
+      </nav>
+
+      {/* Overlay */}
+
+      <div
+        onClick={() =>
+          setMobileMenu(false)
+        }
+        className={`
 fixed
 inset-0
 bg-black/50
-backdrop-blur-sm
 z-40
 transition
-${mobileMenu ? "opacity-100" : "opacity-0 pointer-events-none"}
+${mobileMenu
+            ? "opacity-100"
+            : "pointer-events-none opacity-0"}
 `}
-                    onClick={() => setMobileMenu(false)}
-                />
+      />
 
-                <div
-                    className={`
+      {/* Mobile Sidebar */}
+
+      <div
+        className={`
 fixed
 top-0
 left-0
+z-50
 h-screen
 w-72
 bg-[#06081f]
-z-50
 transition-transform
 duration-300
-${mobileMenu ? "translate-x-0" : "-translate-x-full"}
+${mobileMenu
+            ? "translate-x-0"
+            : "-translate-x-full"}
 `}
-                >
+      >
 
-                    <div className="flex justify-between items-center p-5">
+        <div className="flex items-center justify-between p-5">
 
-                        <h2 className="text-white text-xl font-bold">
-                            SR Creation
-                        </h2>
+          <h2 className="text-xl font-bold text-white">
+            Campus Hub
+          </h2>
 
-                        <button
-                            onClick={() => setMobileMenu(false)}
-                            className="text-white"
-                        >
-                            <X />
-                        </button>
+          <button
+            onClick={() =>
+              setMobileMenu(false)
+            }
+            className="text-white"
+          >
+            <X />
+          </button>
 
-                    </div>
+        </div>
 
-                    <div className="flex flex-col mt-5">
+        <div className="mt-5 flex flex-col">
 
-                        <SmartLink href="/" className="p-4 text-gray-300 hover:bg-white/10">
-                            <Home className="inline mr-3" />
-                            Home
-                        </SmartLink>
+          <SmartLink
+            href="/"
+            className="p-4 text-gray-300 hover:bg-white/10"
+          >
+            <Home className="inline mr-3" />
+            Home
+          </SmartLink>
 
-                        {session && liveOrder?.length > 0 && (
+          {/* <SmartLink
+            href="/buy"
+            className="p-4 text-gray-300 hover:bg-white/10"
+          >
+            <ShoppingBag className="inline mr-3" />
+            Buy
+          </SmartLink>
 
-                            <SmartLink href="/track-order" className="p-4 text-gray-300 hover:bg-white/10">
+          <SmartLink
+            href="/rent-requests"
+            className="p-4 text-gray-300 hover:bg-white/10"
+          >
+            <ClipboardList className="inline mr-3" />
+            Rent Requests
+          </SmartLink> */}
 
-                                <Truck className="inline mr-3" />
+          {session && (
+            <>
+              {/* <SmartLink
+                href="/sell"
+                className="p-4 text-gray-300 hover:bg-white/10"
+              >
+                <PlusCircle className="inline mr-3" />
+                Sell
+              </SmartLink>
 
-                                Track Order
+              <SmartLink
+                href="/rent"
+                className="p-4 text-gray-300 hover:bg-white/10"
+              >
+                <PlusCircle className="inline mr-3" />
+                Rent
+              </SmartLink> */}
 
-                            </SmartLink>
+              <SmartLink
+                href="/my-activity"
+                className="p-4 text-gray-300 hover:bg-white/10"
+              >
+                <User className="inline mr-3" />
+                My Activity
+              </SmartLink>
 
-                        )}
-
-                        {session && (
-
-                            <SmartLink href="/my-orders" className="p-4 text-gray-300 hover:bg-white/10">
-
-                                <Package className="inline mr-3" />
-
-                                My Orders
-
-                            </SmartLink>
-
-                        )}
-
-                        <SmartLink href="/contact" className="p-4 text-gray-300 hover:bg-white/10">
-
-                            <Phone className="inline mr-3" />
-
-                            Contact
-
-                        </SmartLink>
-
-                        {session?.user?.role === "admin" && (
-
-                            <SmartLink href="/admin" className="p-4 text-gray-300 hover:bg-white/10">
-
-                                <Shield className="inline mr-3" />
-
-                                Admin
-
-                            </SmartLink>
-
-                        )}
-
-                        {session && (
-
-                            <button
-
-                                onClick={() => signOut({ callbackUrl: "/" })}
-
-                                className="p-4 text-left text-red-400 hover:bg-red-500/10"
-
-                            >
-
-                                <LogOut className="inline mr-3" />
-
-                                Logout
-
-                            </button>
-
-                        )}
-
-                    </div>
-
-                </div>
-
+              <button
+                onClick={() =>
+                  signOut({
+                    callbackUrl: "/",
+                  })
+                }
+                className="p-4 text-left text-red-400 hover:bg-red-500/10"
+              >
+                <LogOut className="inline mr-3" />
+                Logout
+              </button>
             </>
-        </>
-    );
-}
+          )}
 
-export default Navbar;
+        </div>
+
+      </div>
+    </>
+  );
+}

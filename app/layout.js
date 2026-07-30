@@ -7,7 +7,7 @@ import { CartProvider } from "@/context/CartContext";
 import RouteLoader from "@/components/RouteLoader";
 import { Toaster } from "react-hot-toast";
 // import { CheckoutProvider } from "@/context/CheckoutContext";
-
+import NotificationProvider from "@/components/NotificationProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "SR Creations",
+  title: "HITK Stationary",
   description: "Get your style up!",
 };
 
@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionWrapper>
-
+          <NotificationProvider />
           <CartProvider>
             <RouteLoader>
               {/* <CheckoutProvider> */}

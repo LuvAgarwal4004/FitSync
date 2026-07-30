@@ -14,10 +14,17 @@ export async function POST(req) {
 
         const {
             name,
-            email,
             password
         } = body;
+        let { email } = body;
+        email = String(email || "").trim().toLowerCase();
 
+        if (!email) {
+            return Response.json(
+                { error: "Email required" },
+                { status: 400 }
+            );
+        }
         if (
             !name?.trim() ||
             !email?.trim().toLowerCase() ||

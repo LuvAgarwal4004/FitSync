@@ -1,169 +1,121 @@
-import NextAuth from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
+// app/api/auth/[...nextauth]/route.js
+
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import User from '@/models/User';
-import connectDb from '@/db/connectDb';
+
+import connectDb from "@/db/connectDb";
+import User from "@/models/User";
 
 export const authOptions = {
   session: {
     strategy: "jwt",
   },
+
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
+
       authorization: {
         params: {
-          prompt: "select_account consent"
-        }
-      }
+          prompt: "select_account consent",
+        },
+      },
     }),
-    CredentialsProvider({
 
+    CredentialsProvider({
       name: "credentials",
 
       credentials: {
-
         email: {},
-        password: {}
-
+        password: {},
       },
 
       async authorize(credentials) {
-
         await connectDb();
 
-        const user =
-          await User.findOne({
-            email: credentials.email,
-            verified: true
-          });
+        const user = await User.findOne({
+          email: credentials.email,
+          verified: true,
+        });
 
         if (!user) {
-          throw new Error(
-            "No user found"
-          );
+          throw new Error("No user found");
         }
 
-        // GOOGLE ACCOUNT ONLY
+        // Google account only
         if (!user.password) {
-          throw new Error(
-            "Use Google Login"
-          );
+          throw new Error("Use Google Login");
         }
 
-        const passwordMatch =
-          await bcrypt.compare(
-            credentials.password,
-            user.password
-          );
+        const matched = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
 
-        if (!passwordMatch) {
-          throw new Error(
-            "Wrong password"
-          );
+        if (!matched) {
+          throw new Error("Wrong password");
         }
 
         return {
           id: user._id.toString(),
           email: user.email,
           name: user.name,
-          role: user.role
+          image: user.image,
         };
-
-      }
-
+      },
     }),
   ],
 
   callbacks: {
     async signIn({ user, profile }) {
-      // console.log("USER:", user);
-      // console.log("PROFILE:", profile);
       try {
-        // console.log("STEP 1: SignIn started");
-
         await connectDb();
-        // console.log("STEP 2: DB connected");
 
-        // console.log("USER EMAIL:", user.email);
+        const existingUser = await User.findOne({
+          email: user.email,
+        });
 
-        const currentUser = await User.findOne({ email: user.email });
-
-        // console.log("STEP 3: User checked");
-
-        const isAdmin = user.email === "luvag0707@gmail.com";
-        if (!currentUser) {
-          // console.log("STEP 4: Creating new user");
-
-
-
+        if (!existingUser) {
           await User.create({
             email: user.email,
-            name: user.name || user.email.split("@")[0],
+            name:
+              user.name ||
+              user.email.split("@")[0],
+
             image:
               profile?.picture ||
-              user?.image ||
+              user.image ||
               "",
-            verified: true,
-            role: isAdmin ? "admin" : "user",
-            cart: []
-          });
 
-          // console.log("STEP 5: User created");
-        } else {
-          // FIX: update role if needed
-          if (currentUser.role !== (isAdmin ? "admin" : "user")) {
-            await User.updateOne(
-              { email: user.email },
-              { role: isAdmin ? "admin" : "user" }
-            );
-          }
+            verified: true,
+
+            cart: [],
+          });
         }
 
         return true;
-
       } catch (err) {
-        console.error("🔥 SIGNIN ERROR:", err);
+        console.log(err);
         return false;
       }
     },
-    // async jwt({ token, user }) {
-    //   await connectDb();
 
-    //   const email = user?.email || token.email;
-
-    //   if (email) {
-    //     const dbUser = await User.findOne({ email });
-
-    //     if (dbUser) {
-    //       token.role = dbUser.role;
-    //       token.id = dbUser._id.toString(); // ✅ FIX
-    //       token.name = dbUser.name;
-    //       token.image = dbUser.image;
-    //     }
-    //   }
-
-    //   return token;
-    // },
     async jwt({ token, user }) {
-
-      // Only runs when user logs in
-
       if (user) {
-
         await connectDb();
 
         const dbUser = await User.findOne({
-          email: user.email
+          email: user.email,
         });
 
         if (dbUser) {
           token.id = dbUser._id.toString();
-          token.role = dbUser.role;
           token.name = dbUser.name;
           token.image = dbUser.image;
+          token.email = dbUser.email;
         }
       }
 
@@ -171,15 +123,14 @@ export const authOptions = {
     },
 
     async session({ session, token }) {
-      session.user.id = token.id; // ✅ IMPORTANT
+      session.user.id = token.id;
       session.user.name = token.name;
-      session.user.role = token.role;
-      session.user.image =
-        token.image;
-      // console.log(session?.user);
+      session.user.email = token.email;
+      session.user.image = token.image;
+
       return session;
     },
-  }
+  },
 };
 
 const handler = NextAuth(authOptions);

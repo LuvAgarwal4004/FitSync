@@ -14,24 +14,13 @@ export async function POST(req) {
             await req.json();
 
         let { email } = body;
-
-        email =
-            email
-                .trim()
-                .toLowerCase();
+        email = String(email || "").trim().toLowerCase();
 
         if (!email) {
-
             return Response.json(
-                {
-                    error:
-                        "Email required"
-                },
-                {
-                    status: 400
-                }
+                { error: "Email required" },
+                { status: 400 }
             );
-
         }
 
         const user =
