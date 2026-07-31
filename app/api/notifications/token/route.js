@@ -81,21 +81,21 @@ export async function POST(req) {
 
     console.log("token =", token);
     console.log("userId =", userId);
+await NotificationToken.deleteMany({
+    user: userId,
+});
 
-    const result = await NotificationToken.findOneAndUpdate(
-      { user: userId },
-      {
+await NotificationToken.findOneAndUpdate(
+    { token },
+    {
         token,
         user: userId,
-      },
-      {
+    },
+    {
         upsert: true,
         new: true,
-      }
-    );
-
-    console.log("RESULT:");
-    console.log(result);
+    }
+);
 
     return NextResponse.json({
       success: true,
