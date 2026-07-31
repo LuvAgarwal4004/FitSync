@@ -3,7 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SessionWrapper from "@/components/SessionWrapper";
-import { CartProvider } from "@/context/CartContext";
+// import { CartProvider } from "@/context/CartContext";
 import RouteLoader from "@/components/RouteLoader";
 import { Toaster } from "react-hot-toast";
 // import { CheckoutProvider } from "@/context/CheckoutContext";
@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionWrapper>
           <NotificationProvider />
-          <CartProvider>
+          {/* <CartProvider> */}
             <RouteLoader>
               {/* <CheckoutProvider> */}
 
@@ -46,7 +46,7 @@ export default function RootLayout({ children }) {
               <Footer />
               {/* </CheckoutProvider> */}
             </RouteLoader>
-          </CartProvider>
+          {/* </CartProvider> */}
         </SessionWrapper>
         <Toaster
           position="top-center"
