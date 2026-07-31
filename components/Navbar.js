@@ -66,7 +66,7 @@ export default function Navbar() {
     <img
       src="/logo1.jpg"
       alt="HITK Stationary"
-      className="h-12 w-auto object-contain"
+      className="h-14 w-auto object-contain"
     />
   </div>
 </SmartLink>
