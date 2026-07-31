@@ -45,7 +45,7 @@ export async function POST(request) {
                 notification: {
                     title: "📚 New Rent Request",
                     body: `${body.studentName} wants ${body.itemNeeded}. 
-                    Reward: ₹${body.offeredMoney}, Venue: ${updated.meetLocation}`,
+                    Reward: ₹${body.offeredMoney}, Venue: ${body.meetLocation}`,
                 },
 
                 data: {
