@@ -62,7 +62,7 @@ export default function NotificationProvider() {
     //             //     payload.notification.title,
     //             //     {
     //             //         body: payload.notification.body,
-    //             //         icon: "/logo.jpg",
+    //             //         icon: "/logo1.jpg",
     //             //     }
     //             // );
 

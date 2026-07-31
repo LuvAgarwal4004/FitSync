@@ -43,8 +43,9 @@ export async function POST(request) {
                 tokens: registrationTokens,
 
                 notification: {
-                    title: "New Rent Request",
-                    body: `${body.studentName} requested ${body.itemNeeded}`,
+                    title: "📚 New Rent Request",
+                    body: `${body.studentName} wants ${body.itemNeeded}. 
+                    Reward: ₹${body.offeredMoney}, Venue: ${updated.meetLocation}`,
                 },
 
                 data: {
@@ -74,9 +75,9 @@ export async function POST(request) {
 
                     if (
                         errorCode ===
-                            "messaging/registration-token-not-registered" ||
+                        "messaging/registration-token-not-registered" ||
                         errorCode ===
-                            "messaging/invalid-registration-token"
+                        "messaging/invalid-registration-token"
                     ) {
 
                         await NotificationToken.deleteOne({

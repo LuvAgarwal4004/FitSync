@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import connectDB from "@/db/connectDb";
 import RentRequest from "@/models/RentRequest";
+import NotificationToken from "@/models/NotificationToken";
+import { messaging } from "@/lib/firebaseAdmin";
 
 export const runtime = "nodejs";
 
@@ -60,7 +62,47 @@ export async function PUT(request, { params }) {
       new: true,
       runValidators: true,
     });
+    const tokenDocs = await NotificationToken.find({}, "token");
 
+    const registrationTokens = tokenDocs.map(doc => doc.token);
+
+    if (registrationTokens.length > 0) {
+
+      const response = await messaging.sendEachForMulticast({
+
+        tokens: registrationTokens,
+
+        notification: {
+          title: "✏️ Rent Request Updated",
+          body: `${updated.studentName} updated ${updated.itemNeeded}.
+           Reward: ₹${updated.offeredMoney}, Venue: ${updated.meetLocation}`,
+        },
+
+        data: {
+          url: "/rent-requests",
+        },
+
+      });
+
+      for (let i = 0; i < response.responses.length; i++) {
+
+        const result = response.responses[i];
+
+        if (!result.success) {
+
+          const errorCode = result.error?.code;
+
+          if (
+            errorCode === "messaging/registration-token-not-registered" ||
+            errorCode === "messaging/invalid-registration-token"
+          ) {
+            await NotificationToken.deleteOne({
+              token: registrationTokens[i],
+            });
+          }
+        }
+      }
+    }
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {
     console.log("PUT /api/rent/[id] error:", error);
