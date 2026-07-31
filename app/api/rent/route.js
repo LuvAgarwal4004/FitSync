@@ -26,8 +26,19 @@ export async function POST(request) {
         });
         // const tokens =
         //     await NotificationToken.find({});
-
-
+        const tokens = await NotificationToken.find({});
+        const registrationTokens =
+            tokens.map(t => t.token);
+        await messaging.sendEachForMulticast({
+            tokens: registrationTokens,
+            notification: {
+                title: "New Rent Request",
+                body: `${body.studentName} wants ${body.itemNeeded}`
+            },
+            data: {
+                url: "/rent-requests"
+            }
+        });
         // const notificationTokens =
         //     tokens.map(
         //         item => item.token
