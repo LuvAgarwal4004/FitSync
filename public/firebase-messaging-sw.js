@@ -39,7 +39,7 @@ console.log(payload);
         payload.notification.title,
         {
             body: payload.notification.body,
-            icon: "/logo.jpg",
+            icon: "/logo1.jpg",
 
             data: {
                 url: payload.data.url

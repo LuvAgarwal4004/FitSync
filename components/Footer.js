@@ -18,11 +18,11 @@ const Footer = () => {
             <div className="text-center md:text-left">
 
               <h2 className="text-2xl font-bold">
-                SR Creation
+                HITK Stationary
               </h2>
 
               <p className="text-gray-400 text-sm mt-2">
-                Premium Fashion • Quality • Style
+                Help your friends in the college
               </p>
 
             </div>
@@ -37,12 +37,12 @@ const Footer = () => {
                 Home
               </a>
 
-              <a
+              {/* <a
                 href="/collections"
                 className="hover:text-blue-400 transition"
               >
                 Collections
-              </a>
+              </a> */}
 
               <a
                 href="/contact"
@@ -51,12 +51,12 @@ const Footer = () => {
                 Contact
               </a>
 
-              <a
+              {/* <a
                 href="/privacy"
                 className="hover:text-blue-400 transition"
               >
                 Privacy Policy
-              </a>
+              </a> */}
 
             </div>
 
@@ -67,7 +67,7 @@ const Footer = () => {
 
             © {new Date().getFullYear()}{" "}
             <span className="font-semibold text-white">
-              SR Creation
+              HITK Stationary
             </span>
             . All Rights Reserved.
 

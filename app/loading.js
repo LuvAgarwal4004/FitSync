@@ -19,7 +19,7 @@ export default function Loading() {
     const targets = [];
 
     const img = new Image();
-    img.src = "/logo.jpg"; // 👈 YOUR SR LOGO
+    img.src = "/logo1.jpg"; // 👈 YOUR SR LOGO
 
     img.onload = () => {
       const size = 220;

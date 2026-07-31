@@ -15,7 +15,7 @@ const Page = () => {
           </h1>
 
           <p className="text-gray-300 leading-7">
-            Have questions about your order, products, or anything else?
+            Have questions about a bug in website or a error or anything?!
             We'd love to hear from you.
           </p>
 
@@ -28,7 +28,7 @@ const Page = () => {
                   Email
                 </p>
                 <p className="font-medium break-all">
-                  rupam3059@gmail.com
+                  luvag0707@gmail.com
                 </p>
               </div>
             </div>
@@ -40,7 +40,7 @@ const Page = () => {
                   Phone
                 </p>
                 <p className="font-medium">
-                  +91 7003385269
+                  +91 7278717660
                 </p>
               </div>
             </div>
@@ -71,8 +71,8 @@ const Page = () => {
           </h2>
 
           <p className="text-gray-500 mb-8 leading-7">
-            Whether you have a question about your order, shipping,
-            returns, or our collections, we're here to help.
+            Whether you have a question about your rent or sells, buys,
+            etc, we're here to help.
           </p>
 
           <div className="space-y-5">
@@ -89,7 +89,7 @@ const Page = () => {
                   </p>
 
                   <p className="text-gray-500 text-sm break-all">
-                    rupam3059@gmail.com
+                    luvag0707@gmail.com
                   </p>
                 </div>
 
@@ -109,7 +109,7 @@ const Page = () => {
                   </p>
 
                   <p className="text-gray-500 text-sm">
-                    +91 7003385269
+                    +91 9874448947
                   </p>
                 </div>
 

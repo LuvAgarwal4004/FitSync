@@ -87,7 +87,7 @@ export default function NotificationProvider() {
                 const registration = await navigator.serviceWorker.ready;
                 registration.showNotification(payload.notification?.title, {
                     body: payload.notification?.body,
-                    icon: "/logo.jpg",
+                    icon: "/logo1.jpg",
                     data: { url: payload.data?.url || "/rent-requests" },
                 });
             }

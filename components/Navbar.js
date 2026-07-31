@@ -63,7 +63,7 @@ export default function Navbar() {
             {/* Logo */}
             <SmartLink href="/">
               <img
-                src="/logo.jpg"
+                src="/logo1.jpg"
                 alt="Campus Stationery Hub"
                 className="h-14 sm:h-16 md:h-20 w-auto"
               />
