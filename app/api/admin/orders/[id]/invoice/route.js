@@ -1,103 +1,103 @@
-import connectDb from "@/db/connectDb";
-import Order from "@/models/Order";
-import cloudinary
-    from "@/lib/cloudinary";
+// import connectDb from "@/db/connectDb";
+// import Order from "@/models/Order";
+// import cloudinary
+//     from "@/lib/cloudinary";
 
-import { getServerSession }
-    from "next-auth";
+// import { getServerSession }
+//     from "next-auth";
 
-import { authOptions }
-    from "@/app/api/auth/[...nextauth]/route";
+// import { authOptions }
+//     from "@/app/api/auth/[...nextauth]/route";
 
-export async function GET(
-    req,
-    { params }
-) {
+// export async function GET(
+//     req,
+//     { params }
+// ) {
 
-    try {
+//     try {
 
-        await connectDb();
+//         await connectDb();
 
-        const session =
-            await getServerSession(
-                authOptions
-            );
+//         const session =
+//             await getServerSession(
+//                 authOptions
+//             );
 
-        if (!session) {
+//         if (!session) {
 
-            return Response.json(
-                {
-                    error: "Unauthorized"
-                },
-                {
-                    status: 401
-                }
-            );
+//             return Response.json(
+//                 {
+//                     error: "Unauthorized"
+//                 },
+//                 {
+//                     status: 401
+//                 }
+//             );
 
-        }
+//         }
 
-        // ADMIN CHECK
+//         // ADMIN CHECK
 
-        if (
-            session.user.role !==
-            "admin"
-        ) {
+//         if (
+//             session.user.role !==
+//             "admin"
+//         ) {
 
-            return Response.json(
-                {
-                    error: "Forbidden"
-                },
-                {
-                    status: 403
-                }
-            );
+//             return Response.json(
+//                 {
+//                     error: "Forbidden"
+//                 },
+//                 {
+//                     status: 403
+//                 }
+//             );
 
-        }
-        const { id } = await params;
-        const order =
-            await Order.findById(
-                id
-            );
+//         }
+//         const { id } = await params;
+//         const order =
+//             await Order.findById(
+//                 id
+//             );
 
-        if (!order) {
+//         if (!order) {
 
-            return Response.json(
-                {
-                    error:
-                        "Order not found"
-                },
-                {
-                    status: 404
-                }
-            );
+//             return Response.json(
+//                 {
+//                     error:
+//                         "Order not found"
+//                 },
+//                 {
+//                     status: 404
+//                 }
+//             );
 
-        }
+//         }
 
-        const signedUrl =
-            cloudinary.utils.private_download_url(
-                order.invoicePublicId,
-                "pdf",
-                {
-                    resource_type: "raw"
-                }
-            );
+//         const signedUrl =
+//             cloudinary.utils.private_download_url(
+//                 order.invoicePublicId,
+//                 "pdf",
+//                 {
+//                     resource_type: "raw"
+//                 }
+//             );
 
-        return Response.redirect(
-            signedUrl
-        );
+//         return Response.redirect(
+//             signedUrl
+//         );
 
-    } catch (err) {
+//     } catch (err) {
 
-        return Response.json(
-            {
-                error:
-                    err.message
-            },
-            {
-                status: 500
-            }
-        );
+//         return Response.json(
+//             {
+//                 error:
+//                     err.message
+//             },
+//             {
+//                 status: 500
+//             }
+//         );
 
-    }
+//     }
 
-}
+// }

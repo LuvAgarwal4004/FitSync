@@ -1,175 +1,175 @@
-"use client";
+// "use client";
 
-import { useState } from "react";
+// import { useState } from "react";
 
-export default function MobileFilterDrawer({
-  maxPrice,
-  setMaxPrice,
-}) {
+// export default function MobileFilterDrawer({
+//   maxPrice,
+//   setMaxPrice,
+// }) {
 
-  const [open, setOpen] = useState(false);
+//   const [open, setOpen] = useState(false);
 
-  return (
-    <>
+//   return (
+//     <>
 
-      {/* Open Button */}
+//       {/* Open Button */}
 
-      <button
-        onClick={() => setOpen(true)}
-        className="
-          lg:hidden
+//       <button
+//         onClick={() => setOpen(true)}
+//         className="
+//           lg:hidden
 
-          w-full
+//           w-full
 
-          bg-white
+//           bg-white
 
-          border
+//           border
 
-          rounded-2xl
+//           rounded-2xl
 
-          shadow-sm
+//           shadow-sm
 
-          py-3
+//           py-3
 
-          font-semibold
+//           font-semibold
 
-          mb-6
-        "
-      >
-        🔍 Filters
-      </button>
+//           mb-6
+//         "
+//       >
+//         🔍 Filters
+//       </button>
 
-      {/* Overlay */}
+//       {/* Overlay */}
 
-      <div
-        onClick={() => setOpen(false)}
-        className={`
-          fixed
-          inset-0
-          bg-black/40
-          z-40
+//       <div
+//         onClick={() => setOpen(false)}
+//         className={`
+//           fixed
+//           inset-0
+//           bg-black/40
+//           z-40
 
-          transition-opacity
+//           transition-opacity
 
-          ${open
-            ? "opacity-100 visible"
-            : "opacity-0 invisible"}
-        `}
-      />
+//           ${open
+//             ? "opacity-100 visible"
+//             : "opacity-0 invisible"}
+//         `}
+//       />
 
-      {/* Drawer */}
+//       {/* Drawer */}
 
-      <div
-        className={`
-          fixed
+//       <div
+//         className={`
+//           fixed
 
-          bottom-0
-          left-0
-          right-0
+//           bottom-0
+//           left-0
+//           right-0
 
-          bg-white
+//           bg-white
 
-          rounded-t-3xl
+//           rounded-t-3xl
 
-          z-50
+//           z-50
 
-          p-6
+//           p-6
 
-          transition-transform
-          duration-300
+//           transition-transform
+//           duration-300
 
-          ${open
-            ? "translate-y-0"
-            : "translate-y-full"}
-        `}
-      >
+//           ${open
+//             ? "translate-y-0"
+//             : "translate-y-full"}
+//         `}
+//       >
 
-        <div className="flex justify-between items-center mb-8">
+//         <div className="flex justify-between items-center mb-8">
 
-          <h2 className="text-2xl font-bold">
-            Filters
-          </h2>
+//           <h2 className="text-2xl font-bold">
+//             Filters
+//           </h2>
 
-          <button
-            onClick={() => setOpen(false)}
-            className="text-2xl"
-          >
-            ✕
-          </button>
+//           <button
+//             onClick={() => setOpen(false)}
+//             className="text-2xl"
+//           >
+//             ✕
+//           </button>
 
-        </div>
+//         </div>
 
-        <div>
+//         <div>
 
-          <div className="flex justify-between mb-4">
+//           <div className="flex justify-between mb-4">
 
-            <span className="font-semibold">
-              Price
-            </span>
+//             <span className="font-semibold">
+//               Price
+//             </span>
 
-            <span
-              className="
-              bg-black
-              text-white
-              px-3
-              py-1
-              rounded-full
-              text-sm
-            "
-            >
-              ₹{maxPrice}
-            </span>
+//             <span
+//               className="
+//               bg-black
+//               text-white
+//               px-3
+//               py-1
+//               rounded-full
+//               text-sm
+//             "
+//             >
+//               ₹{maxPrice}
+//             </span>
 
-          </div>
+//           </div>
 
-          <input
-            type="range"
-            min="0"
-            max="5000"
-            step="100"
-            value={maxPrice}
-            onChange={(e) =>
-              setMaxPrice(Number(e.target.value))
-            }
-            className="
-            w-full
-            accent-blue-600
-          "
-          />
+//           <input
+//             type="range"
+//             min="0"
+//             max="5000"
+//             step="100"
+//             value={maxPrice}
+//             onChange={(e) =>
+//               setMaxPrice(Number(e.target.value))
+//             }
+//             className="
+//             w-full
+//             accent-blue-600
+//           "
+//           />
 
-          <div className="flex justify-between mt-3 text-sm text-gray-400">
+//           <div className="flex justify-between mt-3 text-sm text-gray-400">
 
-            <span>₹0</span>
+//             <span>₹0</span>
 
-            <span>₹5000</span>
+//             <span>₹5000</span>
 
-          </div>
+//           </div>
 
-        </div>
+//         </div>
 
-        <button
-          onClick={() => setOpen(false)}
-          className="
-            mt-8
+//         <button
+//           onClick={() => setOpen(false)}
+//           className="
+//             mt-8
 
-            w-full
+//             w-full
 
-            bg-blue-600
+//             bg-blue-600
 
-            text-white
+//             text-white
 
-            rounded-xl
+//             rounded-xl
 
-            py-3
+//             py-3
 
-            font-semibold
-          "
-        >
-          Apply Filters
-        </button>
+//             font-semibold
+//           "
+//         >
+//           Apply Filters
+//         </button>
 
-      </div>
+//       </div>
 
-    </>
-  );
-}
+//     </>
+//   );
+// }

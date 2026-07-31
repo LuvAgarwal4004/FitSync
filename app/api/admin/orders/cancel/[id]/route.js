@@ -1,66 +1,66 @@
-import connectDb from "@/db/connectDb";
-import Order from "@/models/Order";
+// import connectDb from "@/db/connectDb";
+// import Order from "@/models/Order";
 
-export async function PATCH(
-  req,
-  { params }
-) {
+// export async function PATCH(
+//   req,
+//   { params }
+// ) {
 
-  try {
+//   try {
 
-    await connectDb();
+//     await connectDb();
 
-    const { id } = params;
+//     const { id } = params;
 
-    const order =
-      await Order.findById(id);
+//     const order =
+//       await Order.findById(id);
 
-    if (!order) {
+//     if (!order) {
 
-      return Response.json(
-        { error: "Order not found" },
-        { status: 404 }
-      );
+//       return Response.json(
+//         { error: "Order not found" },
+//         { status: 404 }
+//       );
 
-    }
+//     }
 
-    // DON'T CANCEL AFTER SHIPPING
-    if (
-      [
-        "shipped",
-        "out_for_delivery",
-        "delivered"
-      ].includes(order.status)
-    ) {
+//     // DON'T CANCEL AFTER SHIPPING
+//     if (
+//       [
+//         "shipped",
+//         "out_for_delivery",
+//         "delivered"
+//       ].includes(order.status)
+//     ) {
 
-      return Response.json(
-        {
-          error:
-            "Order can no longer be cancelled"
-        },
-        {
-          status: 400
-        }
-      );
+//       return Response.json(
+//         {
+//           error:
+//             "Order can no longer be cancelled"
+//         },
+//         {
+//           status: 400
+//         }
+//       );
 
-    }
+//     }
 
-    order.status = "cancelled";
+//     order.status = "cancelled";
 
-    order.cancelledBy = "user";
+//     order.cancelledBy = "user";
 
-    await order.save();
+//     await order.save();
 
-    return Response.json({
-      success: true
-    });
+//     return Response.json({
+//       success: true
+//     });
 
-  } catch (err) {
+//   } catch (err) {
 
-    return Response.json(
-      { error: err.message },
-      { status: 500 }
-    );
+//     return Response.json(
+//       { error: err.message },
+//       { status: 500 }
+//     );
 
-  }
-}
+//   }
+// }

@@ -1,28 +1,28 @@
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 
-const checkoutSessionSchema =
-    new mongoose.Schema({
+// const checkoutSessionSchema =
+//     new mongoose.Schema({
 
-        userId: {
-            type: String,
-            required: true
-        },
+//         userId: {
+//             type: String,
+//             required: true
+//         },
 
-        step: {
-            type: Number,
-            default: 1
-        },
+//         step: {
+//             type: Number,
+//             default: 1
+//         },
 
-        completed: {
-            type: Boolean,
-            default: false
-        }
+//         completed: {
+//             type: Boolean,
+//             default: false
+//         }
 
-    }, { timestamps: true });
+//     }, { timestamps: true });
 
-export default
-    mongoose.models.CheckoutSession ||
-    mongoose.model(
-        "CheckoutSession",
-        checkoutSessionSchema
-    );
+// export default
+//     mongoose.models.CheckoutSession ||
+//     mongoose.model(
+//         "CheckoutSession",
+//         checkoutSessionSchema
+//     );

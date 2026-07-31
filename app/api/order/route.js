@@ -1,381 +1,381 @@
-export const runtime = "nodejs";
-import connectDb from "@/db/connectDb";
-import User from "@/models/User";
-import Order from "@/models/Order";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import Product from "@/models/Product";
-import CheckoutSession
-  from "@/models/CheckoutSession";
-import { generateInvoice }
-  from "@/lib/generateInvoice";
-import {
-  sendCustomerEmail,
-  sendAdminEmail
-} from "@/lib/sendOrderEmails";
-import cloudinary
-  from "@/lib/cloudinary";
+// export const runtime = "nodejs";
+// import connectDb from "@/db/connectDb";
+// import User from "@/models/User";
+// import Order from "@/models/Order";
+// import { getServerSession } from "next-auth";
+// import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+// import Product from "@/models/Product";
+// import CheckoutSession
+//   from "@/models/CheckoutSession";
+// import { generateInvoice }
+//   from "@/lib/generateInvoice";
+// import {
+//   sendCustomerEmail,
+//   sendAdminEmail
+// } from "@/lib/sendOrderEmails";
+// import cloudinary
+//   from "@/lib/cloudinary";
 
-export async function POST(req) {
-  try {
-    const body = await req.json();
+// export async function POST(req) {
+//   try {
+//     const body = await req.json();
 
-    if (!body || !body.cart) {
-      return Response.json({ error: "Cart missing" }, { status: 400 });
-    }
+//     if (!body || !body.cart) {
+//       return Response.json({ error: "Cart missing" }, { status: 400 });
+//     }
 
-    const { cart, paymentMethod, address } = body;
+//     const { cart, paymentMethod, address } = body;
 
-    await connectDb();
+//     await connectDb();
 
-    const session = await getServerSession(authOptions);
-    if (!session) {
-      return Response.json({ error: "Not logged in" }, { status: 401 });
-    }
-    const oneMinuteAgo =
-      new Date(Date.now() - 60 * 1000);
-    console.log("NOW:", new Date());
-    const recentOrder =
-      await Order.findOne({
-        customerEmail: session.user.email,
-        createdAt: {
-          $gte: oneMinuteAgo
-        }
-      });
-
-
-    console.log("ONE MINUTE AGO:", oneMinuteAgo);
-
-    console.log("RECENT ORDER:", recentOrder?.createdAt);
-    if (recentOrder) {
-      return Response.json(
-        {
-          error:
-            "Please wait a minute before placing another order."
-        },
-        {
-          status: 400
-        }
-      );
-    }
-    // const existingLiveOrder =
-    //   await Order.findOne({
-    //     customerEmail: session.user.email,
-    //     status: {
-    //       $nin: [
-    //         "delivered",
-    //         "cancelled",
-    //         "returned"
-    //       ]
-    //     }
-    //   });
-
-    // if (existingLiveOrder) {
-
-    //   return Response.json(
-    //     {
-    //       error:
-    //         "You already have a live order in progress."
-    //     },
-    //     {
-    //       status: 400
-    //     }
-    //   );
-
-    // }
+//     const session = await getServerSession(authOptions);
+//     if (!session) {
+//       return Response.json({ error: "Not logged in" }, { status: 401 });
+//     }
+//     const oneMinuteAgo =
+//       new Date(Date.now() - 60 * 1000);
+//     console.log("NOW:", new Date());
+//     const recentOrder =
+//       await Order.findOne({
+//         customerEmail: session.user.email,
+//         createdAt: {
+//           $gte: oneMinuteAgo
+//         }
+//       });
 
 
-    const user = await User.findOne({ email: session.user.email });
+//     console.log("ONE MINUTE AGO:", oneMinuteAgo);
 
-    //  GET ALL PRODUCTS FIRST
-    const products = await Product.find({});
+//     console.log("RECENT ORDER:", recentOrder?.createdAt);
+//     if (recentOrder) {
+//       return Response.json(
+//         {
+//           error:
+//             "Please wait a minute before placing another order."
+//         },
+//         {
+//           status: 400
+//         }
+//       );
+//     }
+//     // const existingLiveOrder =
+//     //   await Order.findOne({
+//     //     customerEmail: session.user.email,
+//     //     status: {
+//     //       $nin: [
+//     //         "delivered",
+//     //         "cancelled",
+//     //         "returned"
+//     //       ]
+//     //     }
+//     //   });
 
-    // BUILD ITEMS
-    const items = cart.map(item => {
-      let foundProduct;
+//     // if (existingLiveOrder) {
 
-      if (item.id.includes("-")) {
-        const [collectionId, seq] = item.id.split("-");
+//     //   return Response.json(
+//     //     {
+//     //       error:
+//     //         "You already have a live order in progress."
+//     //     },
+//     //     {
+//     //       status: 400
+//     //     }
+//     //   );
 
-        foundProduct = products.find(
-          p =>
-            p.collectionId === collectionId &&
-            p.sequence === Number(seq)
-        );
-      } else {
-        foundProduct = products.find(
-          p => p._id.toString() === item.id
-        );
-      }
+//     // }
 
-      if (!foundProduct) {
-        throw new Error("Product not found: " + item.id);
-      }
-      const originalPrice =
-        Number(foundProduct.price);
 
-      const finalPrice =
-        foundProduct.isDiscount
-          ? Number(
-            foundProduct.discountedPrice
-          )
-          : originalPrice;
+//     const user = await User.findOne({ email: session.user.email });
 
-      return {
-        id: item.id,
-        name: foundProduct.title,
-        originalPrice,
+//     //  GET ALL PRODUCTS FIRST
+//     const products = await Product.find({});
 
-        finalPrice,
+//     // BUILD ITEMS
+//     const items = cart.map(item => {
+//       let foundProduct;
 
-        discountPercent:
-          foundProduct.isDiscount
-            ? Number(
-              foundProduct.discountPercent || 0
-            )
-            : 0,
-        price: Number(foundProduct.price),
-        image: foundProduct.image,
-        qty: item.qty
-      };
-    });
-    for (const item of items) {
+//       if (item.id.includes("-")) {
+//         const [collectionId, seq] = item.id.split("-");
 
-      if (
-        !Number.isInteger(item.qty) ||
-        item.qty < 1 ||
-        item.qty > 10
-      ) {
+//         foundProduct = products.find(
+//           p =>
+//             p.collectionId === collectionId &&
+//             p.sequence === Number(seq)
+//         );
+//       } else {
+//         foundProduct = products.find(
+//           p => p._id.toString() === item.id
+//         );
+//       }
 
-        throw new Error(
-          "Invalid quantity"
-        );
+//       if (!foundProduct) {
+//         throw new Error("Product not found: " + item.id);
+//       }
+//       const originalPrice =
+//         Number(foundProduct.price);
 
-      }
+//       const finalPrice =
+//         foundProduct.isDiscount
+//           ? Number(
+//             foundProduct.discountedPrice
+//           )
+//           : originalPrice;
 
-    }
+//       return {
+//         id: item.id,
+//         name: foundProduct.title,
+//         originalPrice,
 
-    // CALCULATE TOTAL
-    // const subtotal = items.reduce(
-    //   (acc, item) =>
-    //     acc + item.price * item.qty,
-    //   0
-    // );
-    const originalAmount =
-      items.reduce(
-        (acc, item) =>
-          acc +
-          item.originalPrice *
-          item.qty,
-        0
-      );
+//         finalPrice,
 
-    const subtotal =
-      items.reduce(
-        (acc, item) =>
-          acc +
-          item.finalPrice *
-          item.qty,
-        0
-      );
+//         discountPercent:
+//           foundProduct.isDiscount
+//             ? Number(
+//               foundProduct.discountPercent || 0
+//             )
+//             : 0,
+//         price: Number(foundProduct.price),
+//         image: foundProduct.image,
+//         qty: item.qty
+//       };
+//     });
+//     for (const item of items) {
 
-    const discountAmount =
-      originalAmount -
-      subtotal;
-    // const taxableAmount =
-    //   subtotal;
-    const GST_RATE = 18;
+//       if (
+//         !Number.isInteger(item.qty) ||
+//         item.qty < 1 ||
+//         item.qty > 10
+//       ) {
 
-    const taxableAmount =
-      Number(
-        (
-          subtotal /
-          (1 + GST_RATE / 100)
-        ).toFixed(2)
-      );
+//         throw new Error(
+//           "Invalid quantity"
+//         );
 
-    // const gstAmount =
-    //   Number(
-    //     (
-    //       subtotal * GST_RATE / 100).toFixed(2)
-    //   );
-    const gstAmount =
-      Number(
-        (
-          subtotal -
-          taxableAmount
-        ).toFixed(2)
-      );
-    const BUSINESS_STATE =
-      "West Bengal";
+//       }
 
-    let cgst = 0;
-    let sgst = 0;
-    let igst = 0;
+//     }
 
-    if (
-      address.state?.trim().toLowerCase() ===
-      BUSINESS_STATE.toLowerCase()
-    ) {
-      cgst =
-        Number(
-          (gstAmount / 2).toFixed(2)
-        );
+//     // CALCULATE TOTAL
+//     // const subtotal = items.reduce(
+//     //   (acc, item) =>
+//     //     acc + item.price * item.qty,
+//     //   0
+//     // );
+//     const originalAmount =
+//       items.reduce(
+//         (acc, item) =>
+//           acc +
+//           item.originalPrice *
+//           item.qty,
+//         0
+//       );
 
-      sgst =
-        Number(
-          (gstAmount / 2).toFixed(2)
-        );
-    }
-    else {
-      igst =
-        Number(
-          gstAmount.toFixed(2)
-        );
-    }
+//     const subtotal =
+//       items.reduce(
+//         (acc, item) =>
+//           acc +
+//           item.finalPrice *
+//           item.qty,
+//         0
+//       );
 
-    const shipping =
-      subtotal > 500 ? 0 : 20;
-    const total =
-      subtotal +
-      shipping;
+//     const discountAmount =
+//       originalAmount -
+//       subtotal;
+//     // const taxableAmount =
+//     //   subtotal;
+//     const GST_RATE = 18;
 
-    // const total =
-    //   subtotal + shipping;
+//     const taxableAmount =
+//       Number(
+//         (
+//           subtotal /
+//           (1 + GST_RATE / 100)
+//         ).toFixed(2)
+//       );
 
-    // GET ADDRESS FROM FRONTEND
-    const addressSnapshot = {
-      firstName: body.address.firstName,
-      lastName: body.address.lastName,
-      streetAddress: body.address.streetAddress,
-      city: body.address.city,
-      state: body.address.state,
-      mobile: body.address.mobile,
-    };
-    const checkout =
-      await CheckoutSession.findOne({
-        userId: session.user.id
-      });
+//     // const gstAmount =
+//     //   Number(
+//     //     (
+//     //       subtotal * GST_RATE / 100).toFixed(2)
+//     //   );
+//     const gstAmount =
+//       Number(
+//         (
+//           subtotal -
+//           taxableAmount
+//         ).toFixed(2)
+//       );
+//     const BUSINESS_STATE =
+//       "West Bengal";
 
-    if (!checkout) {
-      return Response.json(
-        {
-          error: "Checkout not started"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-    if (checkout.step !== 4) {
-      return Response.json(
-        {
-          error:
-            "Must complete checkout first"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-    const invoiceNumber =
-      `INV-${Date.now()}`;
-    // CREATE ORDER
-    const newOrder = await Order.create({
-      userId: user._id,
+//     let cgst = 0;
+//     let sgst = 0;
+//     let igst = 0;
 
-      customerName: `${body.address.firstName} ${body.address.lastName}`,
-      customerEmail: session.user.email,
+//     if (
+//       address.state?.trim().toLowerCase() ===
+//       BUSINESS_STATE.toLowerCase()
+//     ) {
+//       cgst =
+//         Number(
+//           (gstAmount / 2).toFixed(2)
+//         );
 
-      items,
+//       sgst =
+//         Number(
+//           (gstAmount / 2).toFixed(2)
+//         );
+//     }
+//     else {
+//       igst =
+//         Number(
+//           gstAmount.toFixed(2)
+//         );
+//     }
 
-      addressSnapshot,
+//     const shipping =
+//       subtotal > 500 ? 0 : 20;
+//     const total =
+//       subtotal +
+//       shipping;
 
-      paymentMethod,
-      originalAmount,
+//     // const total =
+//     //   subtotal + shipping;
 
-      discountAmount,
-      cgst,
-      sgst,
-      igst,
-      subtotal,
+//     // GET ADDRESS FROM FRONTEND
+//     const addressSnapshot = {
+//       firstName: body.address.firstName,
+//       lastName: body.address.lastName,
+//       streetAddress: body.address.streetAddress,
+//       city: body.address.city,
+//       state: body.address.state,
+//       mobile: body.address.mobile,
+//     };
+//     const checkout =
+//       await CheckoutSession.findOne({
+//         userId: session.user.id
+//       });
 
-      total,
+//     if (!checkout) {
+//       return Response.json(
+//         {
+//           error: "Checkout not started"
+//         },
+//         {
+//           status: 403
+//         }
+//       );
+//     }
+//     if (checkout.step !== 4) {
+//       return Response.json(
+//         {
+//           error:
+//             "Must complete checkout first"
+//         },
+//         {
+//           status: 403
+//         }
+//       );
+//     }
+//     const invoiceNumber =
+//       `INV-${Date.now()}`;
+//     // CREATE ORDER
+//     const newOrder = await Order.create({
+//       userId: user._id,
 
-      invoiceNumber,
+//       customerName: `${body.address.firstName} ${body.address.lastName}`,
+//       customerEmail: session.user.email,
 
-      shippingCost: shipping,
+//       items,
 
-      status: "pending"
-    });
-    console.log(newOrder);
-    let pdfBuffer;
+//       addressSnapshot,
 
-    try {
-      pdfBuffer = await generateInvoice(newOrder);
-    }
-    catch (err) {
+//       paymentMethod,
+//       originalAmount,
 
-      await Order.deleteOne({
-        _id: newOrder._id
-      });
+//       discountAmount,
+//       cgst,
+//       sgst,
+//       igst,
+//       subtotal,
 
-      throw err;
-    }
-    const pdfBase64 =
-      pdfBuffer.toString("base64");
+//       total,
 
-    const pdfDataUri =
-      `data:application/pdf;base64,${pdfBase64}`;
-    console.log("Uploading invoice...");
-    const uploadResult =
-      await cloudinary.uploader.upload(
-        pdfDataUri,
-        {
-          folder: "invoices",
-          resource_type: "raw",
-          type: "authenticated"
-        }
-      );
-    console.log(uploadResult);
-    try {
+//       invoiceNumber,
 
-      await sendCustomerEmail(
-        newOrder,
-        session.user.email,
-        pdfBuffer
-      );
+//       shippingCost: shipping,
 
-      await sendAdminEmail(
-        newOrder,
-        session.user.email,
-        pdfBuffer
-      );
+//       status: "pending"
+//     });
+//     console.log(newOrder);
+//     let pdfBuffer;
 
-    } catch (err) {
+//     try {
+//       pdfBuffer = await generateInvoice(newOrder);
+//     }
+//     catch (err) {
 
-      console.error(
-        "Email failed:",
-        err
-      );
+//       await Order.deleteOne({
+//         _id: newOrder._id
+//       });
 
-    }
-    newOrder.invoiceUrl =
-      uploadResult.secure_url;
-    newOrder.invoiceNumber =
-      invoiceNumber;
-    newOrder.invoicePublicId =
-      uploadResult.public_id;
+//       throw err;
+//     }
+//     const pdfBase64 =
+//       pdfBuffer.toString("base64");
 
-    await newOrder.save();
-    // await CheckoutSession.deleteOne({
-    //   _id: checkout._id
-    // });
+//     const pdfDataUri =
+//       `data:application/pdf;base64,${pdfBase64}`;
+//     console.log("Uploading invoice...");
+//     const uploadResult =
+//       await cloudinary.uploader.upload(
+//         pdfDataUri,
+//         {
+//           folder: "invoices",
+//           resource_type: "raw",
+//           type: "authenticated"
+//         }
+//       );
+//     console.log(uploadResult);
+//     try {
 
-    return Response.json({ success: true, order: newOrder });
+//       await sendCustomerEmail(
+//         newOrder,
+//         session.user.email,
+//         pdfBuffer
+//       );
 
-  } catch (err) {
-    console.error(err);
-    return Response.json({ error: err.message, stack: err.stack }, { status: 500 });
-  }
-}
+//       await sendAdminEmail(
+//         newOrder,
+//         session.user.email,
+//         pdfBuffer
+//       );
+
+//     } catch (err) {
+
+//       console.error(
+//         "Email failed:",
+//         err
+//       );
+
+//     }
+//     newOrder.invoiceUrl =
+//       uploadResult.secure_url;
+//     newOrder.invoiceNumber =
+//       invoiceNumber;
+//     newOrder.invoicePublicId =
+//       uploadResult.public_id;
+
+//     await newOrder.save();
+//     // await CheckoutSession.deleteOne({
+//     //   _id: checkout._id
+//     // });
+
+//     return Response.json({ success: true, order: newOrder });
+
+//   } catch (err) {
+//     console.error(err);
+//     return Response.json({ error: err.message, stack: err.stack }, { status: 500 });
+//   }
+// }

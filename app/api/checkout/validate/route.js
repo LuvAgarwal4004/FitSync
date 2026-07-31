@@ -1,100 +1,100 @@
-import { getServerSession }
-  from "next-auth";
+// import { getServerSession }
+//   from "next-auth";
 
-import { authOptions }
-  from "@/app/api/auth/[...nextauth]/route";
+// import { authOptions }
+//   from "@/app/api/auth/[...nextauth]/route";
 
-import connectDb
-  from "@/db/connectDb";
+// import connectDb
+//   from "@/db/connectDb";
 
-import CheckoutSession
-  from "@/models/CheckoutSession";
+// import CheckoutSession
+//   from "@/models/CheckoutSession";
 
-export async function GET(req) {
+// export async function GET(req) {
 
-  try {
+//   try {
 
-    await connectDb();
+//     await connectDb();
 
-    const session =
-      await getServerSession(
-        authOptions
-      );
+//     const session =
+//       await getServerSession(
+//         authOptions
+//       );
 
-    if (!session) {
+//     if (!session) {
 
-      return Response.json(
-        {
-          allowed: false
-        },
-        {
-          status: 401
-        }
-      );
+//       return Response.json(
+//         {
+//           allowed: false
+//         },
+//         {
+//           status: 401
+//         }
+//       );
 
-    }
+//     }
 
-    const { searchParams } =
-      new URL(req.url);
+//     const { searchParams } =
+//       new URL(req.url);
 
-    const requestedStep =
-      Number(
-        searchParams.get("step")
-      );
+//     const requestedStep =
+//       Number(
+//         searchParams.get("step")
+//       );
 
-    const checkout =
-      await CheckoutSession.findOne({
+//     const checkout =
+//       await CheckoutSession.findOne({
 
-        userId:
-          session.user.id
+//         userId:
+//           session.user.id
 
-      });
+//       });
 
-    if (!checkout) {
+//     if (!checkout) {
 
-      return Response.json({
-        allowed: false
-      });
+//       return Response.json({
+//         allowed: false
+//       });
 
-    }
+//     }
 
-    // block after completion
+//     // block after completion
 
-    if (checkout.completed) {
+//     if (checkout.completed) {
 
-      return Response.json({
-        allowed: false
-      });
+//       return Response.json({
+//         allowed: false
+//       });
 
-    }
+//     }
 
-    // allow only current step
-    // OR previous step
+//     // allow only current step
+//     // OR previous step
 
-    const allowed =
-      requestedStep <= checkout.step &&
-      !checkout.completed;
+//     const allowed =
+//       requestedStep <= checkout.step &&
+//       !checkout.completed;
 
-    console.log("REQUESTED:", requestedStep);
-    console.log("DB STEP:", checkout?.step);
-    console.log("ALLOWED:", allowed);
+//     console.log("REQUESTED:", requestedStep);
+//     console.log("DB STEP:", checkout?.step);
+//     console.log("ALLOWED:", allowed);
 
-    return Response.json({
-      allowed
-    });
+//     return Response.json({
+//       allowed
+//     });
 
-  } catch (err) {
+//   } catch (err) {
 
-    return Response.json(
-      {
-        error:
-          err.message
-      },
-      {
-        status: 500
-      }
-    );
+//     return Response.json(
+//       {
+//         error:
+//           err.message
+//       },
+//       {
+//         status: 500
+//       }
+//     );
 
-  }
+//   }
 
-}
+// }
