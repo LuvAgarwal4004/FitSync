@@ -48,29 +48,52 @@ export default function NotificationProvider() {
         }
         setup();
     }, [session, status]);
-    useEffect(() => {
+    // useEffect(() => {
 
+    //     if (!messaging) return;
+
+    //     const unsubscribe = onMessage(
+    //         messaging,
+    //         (payload) => {
+
+    //             console.log("Foreground notification:", payload);
+    //             toast(`${payload.notification?.title}: ${payload.notification?.body}`);
+    //             // new Notification(
+    //             //     payload.notification.title,
+    //             //     {
+    //             //         body: payload.notification.body,
+    //             //         icon: "/logo.jpg",
+    //             //     }
+    //             // );
+
+    //         }
+    //     );
+
+    //     return unsubscribe;
+
+    // }, []);
+    useEffect(() => {
         if (!messaging) return;
 
-        const unsubscribe = onMessage(
-            messaging,
-            (payload) => {
+        const unsubscribe = onMessage(messaging, async (payload) => {
+            console.log("Foreground notification:", payload);
 
-                console.log("Foreground notification:", payload);
-                toast(`${payload.notification?.title}: ${payload.notification?.body}`);
-                // new Notification(
-                //     payload.notification.title,
-                //     {
-                //         body: payload.notification.body,
-                //         icon: "/logo.jpg",
-                //     }
-                // );
+            // Keep the in-app toast for when they're actively looking at the tab
+            toast(`${payload.notification?.title}: ${payload.notification?.body}`);
 
+            // ALSO show a real OS-level notification, same as the background path,
+            // so it behaves identically whether the tab is focused or not
+            if ("serviceWorker" in navigator) {
+                const registration = await navigator.serviceWorker.ready;
+                registration.showNotification(payload.notification?.title, {
+                    body: payload.notification?.body,
+                    icon: "/logo.jpg",
+                    data: { url: payload.data?.url || "/rent-requests" },
+                });
             }
-        );
+        });
 
         return unsubscribe;
-
     }, []);
     return null;
 }
