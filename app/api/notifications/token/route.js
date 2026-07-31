@@ -1,56 +1,66 @@
-import {NextResponse} from "next/server";
+import { NextResponse } from "next/server";
 import connectDB from "@/db/connectDb";
 import NotificationToken from "@/models/NotificationToken";
 
 
-export async function POST(req){
+export async function POST(req) {
 
 
-try{
+    try {
 
-await connectDB();
-
-
-const {token,userId}=await req.json();
+        await connectDB();
 
 
-await NotificationToken.findOneAndUpdate(
-
- {token},
-
- {
-  token,
-  user:userId
- },
-
- {
-  upsert:true,
-  new:true
- }
-
-);
+        const { token, userId } = await req.json();
 
 
-return NextResponse.json({
-success:true
-});
+        // await NotificationToken.findOneAndUpdate(
+
+        //  {token},
+
+        //  {
+        //   token,
+        //   user:userId
+        //  },
+
+        //  {
+        //   upsert:true,
+        //   new:true
+        //  }
+
+        // );
+        await NotificationToken.findOneAndUpdate(
+            { user: userId },
+            {
+                token,
+                user: userId,
+            },
+            {
+                upsert: true,
+                new: true,
+            }
+        );
+
+        return NextResponse.json({
+            success: true
+        });
 
 
-}
-catch(error){
+    }
+    catch (error) {
 
-console.log(error);
+        console.log(error);
 
-return NextResponse.json(
-{
-error:"failed"
-},
-{
-status:500
-}
-)
+        return NextResponse.json(
+            {
+                error: "failed"
+            },
+            {
+                status: 500
+            }
+        )
 
-}
+    }
 
 
 }
