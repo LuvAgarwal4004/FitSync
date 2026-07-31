@@ -47,10 +47,9 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-[#06081f] shadow-lg">
-        <div className="mx-auto max-w-7xl px-4">
+<nav className="sticky top-0 z-50 bg-[#07091d]/95 backdrop-blur-md border-b border-white/10 shadow-xl">        <div className="mx-auto max-w-7xl px-4">
 
-          <div className="flex h-20 items-center justify-between">
+          <div className="flex h-24 items-center justify-between">
 
             {/* Mobile Menu Button */}
             <button
@@ -61,13 +60,16 @@ export default function Navbar() {
             </button>
 
             {/* Logo */}
-            <SmartLink href="/">
-              <img
-                src="/logo1.jpg"
-                alt="Campus Stationery Hub"
-                className="h-14 sm:h-16 md:h-20 w-auto"
-              />
-            </SmartLink>
+            {/* Logo */}
+<SmartLink href="/" className="flex items-center">
+  <div className="flex items-center rounded-xl bg-white px-2 py-1 shadow-md">
+    <img
+      src="/logo1.jpg"
+      alt="HITK Stationary"
+      className="h-12 w-auto object-contain"
+    />
+  </div>
+</SmartLink>
 
             {/* Desktop Links */}
 
