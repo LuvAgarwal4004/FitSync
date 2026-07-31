@@ -207,7 +207,7 @@ export default function ProductForm({
                 name="year"
                 value={form.year}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
+                className="rounded-2xl border border-white/15 bg-white text-black px-4 py-3 outline-none"
               >
                 <option value="">
                   Select Year
@@ -300,7 +300,8 @@ export default function ProductForm({
                 name="condition"
                 value={form.condition}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full rounded-xl border border-gray-300 
+                px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">
                   Select Condition

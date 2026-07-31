@@ -12,6 +12,7 @@ export default function BuyPage() {
   const [maxPrice, setMaxPrice] = useState("");
   const [condition, setCondition] = useState("");
   const [sortBy, setSortBy] = useState("newest");
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -130,8 +131,17 @@ export default function BuyPage() {
             Browse stationery items posted by students and contact the seller
             directly on WhatsApp.
           </p>
+          {/* Mobile Filter Button */}
 
-          <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
+          <div className="mt-5 md:hidden">
+            <button
+              onClick={() => setShowFilters(true)}
+              className="w-full rounded-2xl bg-indigo-600 py-3 font-semibold text-white"
+            >
+              Filters
+            </button>
+          </div>
+          <div className="hidden md:grid mt-6 grid-cols-2 xl:grid-cols-5 gap-4">
             <input
               type="text"
               value={search}
@@ -159,7 +169,7 @@ export default function BuyPage() {
             <select
               value={condition}
               onChange={(e) => setCondition(e.target.value)}
-              className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white outline-none transition focus:border-white/30 focus:bg-white/15"
+              className="rounded-2xl border border-white/15 bg-white text-black px-4 py-3 outline-none"
             >
               <option value="">All conditions</option>
               <option value="Brand New">Brand New</option>
@@ -171,7 +181,7 @@ export default function BuyPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white outline-none transition focus:border-white/30 focus:bg-white/15"
+              className="rounded-2xl border border-white/15 bg-white text-black px-4 py-3 outline-none"
             >
               <option value="newest">Newest</option>
               <option value="price-low">Price: Low to High</option>
@@ -293,6 +303,100 @@ export default function BuyPage() {
           </div>
         )}
       </section>
+      {/* Mobile Filter Sidebar */}
+
+      {showFilters && (
+        <>
+          {/* Dark Overlay */}
+          <div
+            onClick={() => setShowFilters(false)}
+            className="fixed inset-0 z-40 bg-black/50"
+          />
+
+          {/* Sidebar */}
+          <div className="fixed top-0 right-0 z-50 h-full w-80 max-w-[90%] bg-slate-900 p-6 overflow-y-auto shadow-2xl">
+
+            <div className="flex items-center justify-between mb-6">
+
+              <h2 className="text-xl font-bold text-white">
+                Filters
+              </h2>
+
+              <button
+                onClick={() => setShowFilters(false)}
+                className="text-2xl text-white"
+              >
+                ✕
+              </button>
+
+            </div>
+
+            <div className="space-y-4">
+
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search..."
+                className="w-full rounded-xl bg-white/10 border border-white/20 p-3 text-white placeholder:text-gray-400"
+              />
+
+              <input
+                type="number"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+                placeholder="Minimum Price"
+                className="w-full rounded-xl bg-white/10 border border-white/20 p-3 text-white placeholder:text-gray-400"
+              />
+
+              <input
+                type="number"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                placeholder="Maximum Price"
+                className="w-full rounded-xl bg-white/10 border border-white/20 p-3 text-white placeholder:text-gray-400"
+              />
+
+              <select
+                value={condition}
+                onChange={(e) => setCondition(e.target.value)}
+                className="w-full rounded-xl bg-white text-black border p-3"
+              >
+                <option value="">All conditions</option>
+                <option value="Brand New">Brand New</option>
+                <option value="Like New">Like New</option>
+                <option value="Good">Good</option>
+                <option value="Used">Used</option>
+              </select>
+
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="w-full rounded-xl bg-white text-black border p-3"
+              >
+                <option value="newest">Newest</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+              </select>
+
+              <button
+                onClick={clearFilters}
+                className="w-full rounded-xl bg-red-500 py-3 font-semibold text-white"
+              >
+                Clear Filters
+              </button>
+
+              <button
+                onClick={() => setShowFilters(false)}
+                className="w-full rounded-xl bg-indigo-600 py-3 font-semibold text-white"
+              >
+                Apply Filters
+              </button>
+
+            </div>
+          </div>
+        </>
+      )}
     </main>
   );
 }

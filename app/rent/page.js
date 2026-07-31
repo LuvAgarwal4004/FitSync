@@ -215,7 +215,7 @@ export default function RentPage() {
                                     name="year"
                                     value={form.year}
                                     onChange={handleChange}
-                                    className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-3 outline-none focus:border-white/30"
+                                    className="rounded-2xl border border-white/15 bg-white text-black px-4 py-3 outline-none"
                                 >
                                     <option value="">Select Year</option>
                                     <option value="1st Year">1st Year</option>
