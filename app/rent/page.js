@@ -74,7 +74,7 @@ export default function RentPage() {
                     offeredMoney: data.offeredMoney || "",
                 });
             } catch (error) {
-                console.log(error);
+                // console.log(error);
                 toast.error("Could not load rent request for editing.");
                 router.replace("/my-activity");
             } finally {
@@ -132,13 +132,13 @@ export default function RentPage() {
             });
 
             if (!res.ok) {
-                throw new Error("Failed to save rent request");
+                throw new Error("Failed to save Borrow request");
             }
 
             toast.success(
                 editId
-                    ? "Rent request updated successfully!"
-                    : "Rent request posted successfully!"
+                    ? "Borrow request updated successfully!"
+                    : "Borrow request posted successfully!"
             );
 
             router.replace("/");
@@ -170,7 +170,7 @@ export default function RentPage() {
             >
                 <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 p-8">
                     <h1 className="text-3xl font-bold sm:text-4xl">
-                        {editId ? "Edit Rent Request" : "Rent Stationery"}
+                        {editId ? "Edit Borrow Request" : "Borrow Stationery"}
                     </h1>
                     <p className="mt-2 text-white/90">
                         Fill in your details and request the stationery you need.
@@ -255,7 +255,7 @@ export default function RentPage() {
                     </section>
 
                     <section>
-                        <h2 className="mb-6 text-2xl font-bold">Rent Request Details</h2>
+                        <h2 className="mb-6 text-2xl font-bold">Borrow Request Details</h2>
 
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div>
@@ -372,7 +372,7 @@ export default function RentPage() {
                             disabled={loading}
                             className="w-full rounded-2xl bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 px-12 py-4 text-lg font-bold text-white shadow-xl transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50 md:w-auto"
                         >
-                            {loading ? "Posting..." : editId ? "Update Rent Request" : "Post Rent Request"}
+                            {loading ? "Posting..." : editId ? "Update Borrow Request" : "Post Borrow Request"}
                         </button>
                     </div>
                 </div>

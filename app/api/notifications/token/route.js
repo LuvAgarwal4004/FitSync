@@ -74,13 +74,13 @@ export async function POST(req) {
 
     const body = await req.json();
 
-    console.log("BODY:");
-    console.log(body);
+    // console.log("BODY:");
+    // console.log(body);
 
     const { token, userId } = body;
 
-    console.log("token =", token);
-    console.log("userId =", userId);
+    // console.log("token =", token);
+    // console.log("userId =", userId);
 await NotificationToken.deleteMany({
     user: userId,
 });

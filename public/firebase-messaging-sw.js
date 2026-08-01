@@ -27,12 +27,12 @@ const messaging = firebase.messaging();
 
 
 messaging.onBackgroundMessage((payload) => {
-console.log("BACKGROUND MESSAGE");
-console.log(payload);
-    console.log(
-        "Background message received ",
-        payload
-    );
+// console.log("BACKGROUND MESSAGE");
+// console.log(payload);
+    // console.log(
+        // "Background message received ",
+        // payload
+    // );
 
 
     self.registration.showNotification(

@@ -28,7 +28,7 @@ export async function GET(request, { params }) {
 
     return NextResponse.json(product, { status: 200 });
   } catch (error) {
-    console.log("GET /api/products/[id] error:", error);
+    // console.log("GET /api/products/[id] error:", error);
     return NextResponse.json(
       { message: "Failed to fetch product" },
       { status: 500 }
@@ -64,7 +64,7 @@ const { id } = await params;
 
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {
-    console.log("PUT /api/products/[id] error:", error);
+    // console.log("PUT /api/products/[id] error:", error);
     return NextResponse.json(
       { message: "Update failed" },
       { status: 500 }
@@ -96,7 +96,7 @@ export async function DELETE(request, { params }) {
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    console.log("DELETE /api/products/[id] error:", error);
+    // console.log("DELETE /api/products/[id] error:", error);
     return NextResponse.json(
       { message: "Delete failed" },
       { status: 500 }

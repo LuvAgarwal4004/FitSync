@@ -25,7 +25,7 @@ export async function POST(request) {
 
     return NextResponse.json(product, { status: 201 });
   } catch (error) {
-    console.log("POST /api/products error:", error);
+    // console.log("POST /api/products error:", error);
 
     return NextResponse.json(
       { message: "Failed to save product" },
@@ -44,7 +44,7 @@ export async function GET() {
 
     return NextResponse.json(products, { status: 200 });
   } catch (error) {
-    console.log("GET /api/products error:", error);
+    // console.log("GET /api/products error:", error);
 
     return NextResponse.json(
       { message: "Failed to fetch products" },

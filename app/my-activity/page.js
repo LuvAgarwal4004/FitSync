@@ -31,7 +31,7 @@ export default function MyActivityPage() {
         setProducts(data.products || []);
         setRequests(data.requests || []);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         toast.error("Failed to load activity.");
       } finally {
         setLoading(false);
@@ -76,7 +76,7 @@ export default function MyActivityPage() {
       setProducts((prev) => prev.filter((p) => p._id !== id));
       toast.success("Product deleted.");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error("Could not delete product.");
     } finally {
       setDeletingId("");
@@ -84,7 +84,7 @@ export default function MyActivityPage() {
   };
 
   const handleDeleteRequest = async (id) => {
-    if (!confirm("Delete this rent request?")) return;
+    if (!confirm("Delete this Borrow request?")) return;
 
     try {
       setDeletingId(`request-${id}`);
@@ -99,7 +99,7 @@ export default function MyActivityPage() {
       }
 
       if (res.status === 403) {
-        toast.error("You can only delete your own rent request.");
+        toast.error("You can only delete your own Borrow request.");
         return;
       }
 
@@ -108,10 +108,10 @@ export default function MyActivityPage() {
       }
 
       setRequests((prev) => prev.filter((r) => r._id !== id));
-      toast.success("Rent request deleted.");
+      toast.success("Borrow request deleted.");
     } catch (error) {
-      console.log(error);
-      toast.error("Could not delete rent request.");
+      // console.log(error);
+      toast.error("Could not delete Borrow request.");
     } finally {
       setDeletingId("");
     }
@@ -204,12 +204,12 @@ export default function MyActivityPage() {
 
         <section>
           <h2 className="mb-8 text-2xl font-bold sm:text-3xl">
-            My Rent Requests
+            My Borrow Requests
           </h2>
 
           {requests.length === 0 ? (
             <div className="text-center text-lg text-gray-500">
-              No rent requests yet.
+              No Borrow requests yet.
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">

@@ -9,19 +9,19 @@ import toast from "react-hot-toast";
 export default function NotificationProvider() {
     const { data: session, status } = useSession();
     useEffect(() => {
-        console.log("NotificationProvider mounted");
-        console.log("Status:", status);
-        console.log("Session:", session);
+        // console.log("NotificationProvider mounted");
+        // console.log("Status:", status);
+        // console.log("Session:", session);
         async function setup() {
-            console.log("setup() called");
+            // console.log("setup() called");
             if (!session?.user?.id) {
-                console.log("No user id");
+                // console.log("No user id");
                 return;
             }
-            console.log("User found:", session.user.id);
+            // console.log("User found:", session.user.id);
             const token =
                 await getFCMToken();
-            console.log("FCM Token:", token);
+            // console.log("FCM Token:", token);
             if (token) {
                 const res = await fetch(
                     "/api/notifications/token",
@@ -42,8 +42,8 @@ export default function NotificationProvider() {
                         })
                     }
                 );
-                console.log("Save token status:", res.status);
-                console.log(await res.json());
+                // console.log("Save token status:", res.status);
+                // console.log(await res.json());
             }
         }
         setup();
@@ -76,7 +76,7 @@ export default function NotificationProvider() {
         if (!messaging) return;
 
         const unsubscribe = onMessage(messaging, async (payload) => {
-            console.log("Foreground notification:", payload);
+            // console.log("Foreground notification:", payload);
 
             // Keep the in-app toast for when they're actively looking at the tab
             toast(`${payload.notification?.title}: ${payload.notification?.body}`);

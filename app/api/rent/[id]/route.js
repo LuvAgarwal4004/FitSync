@@ -29,9 +29,9 @@ export async function GET(request, { params }) {
 
     return NextResponse.json(rentRequest, { status: 200 });
   } catch (error) {
-    console.log("GET /api/rent/[id] error:", error);
+    // console.log("GET /api/rent/[id] error:", error);
     return NextResponse.json(
-      { message: "Failed to fetch rent request" },
+      { message: "Failed to fetch Borrow request" },
       { status: 500 }
     );
   }
@@ -73,7 +73,7 @@ export async function PUT(request, { params }) {
         tokens: registrationTokens,
 
         notification: {
-          title: "✏️ Rent Request Updated",
+          title: "✏️ Borrow Request Updated",
           body: `${updated.studentName} updated ${updated.itemNeeded}.
            Reward: ₹${updated.offeredMoney}, Venue: ${updated.meetLocation}`,
         },
@@ -105,7 +105,7 @@ export async function PUT(request, { params }) {
     }
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {
-    console.log("PUT /api/rent/[id] error:", error);
+    // console.log("PUT /api/rent/[id] error:", error);
     return NextResponse.json(
       { message: "Update failed" },
       { status: 500 }
@@ -136,7 +136,7 @@ export async function DELETE(request, { params }) {
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    console.log("DELETE /api/rent/[id] error:", error);
+    // console.log("DELETE /api/rent/[id] error:", error);
     return NextResponse.json(
       { message: "Delete failed" },
       { status: 500 }

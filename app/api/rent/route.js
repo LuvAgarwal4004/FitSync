@@ -34,7 +34,7 @@ export async function POST(request) {
 
         const registrationTokens = tokenDocs.map(doc => doc.token);
 
-        console.log("Number of tokens:", registrationTokens.length);
+        // console.log("Number of tokens:", registrationTokens.length);
 
         if (registrationTokens.length > 0) {
 
@@ -43,7 +43,7 @@ export async function POST(request) {
                 tokens: registrationTokens,
 
                 notification: {
-                    title: "📚 New Rent Request",
+                    title: "📚 New Borrow Request",
                     body: `${body.studentName} wants ${body.itemNeeded}. 
                     Reward: ₹${body.offeredMoney}, Venue: ${body.meetLocation}`,
                 },
@@ -54,9 +54,9 @@ export async function POST(request) {
 
             });
 
-            console.log(
-                `Success: ${response.successCount}, Failed: ${response.failureCount}`
-            );
+            // console.log(
+                // `Success: ${response.successCount}, Failed: ${response.failureCount}`
+            // );
 
             // Remove invalid tokens
             for (let i = 0; i < response.responses.length; i++) {
@@ -67,11 +67,11 @@ export async function POST(request) {
 
                     const errorCode = result.error?.code;
 
-                    console.log(
-                        `Token failed: ${registrationTokens[i]}`
-                    );
+                    // console.log(
+                    //     `Token failed: ${registrationTokens[i]}`
+                    // );
 
-                    console.log(errorCode);
+                    // console.log(errorCode);
 
                     if (
                         errorCode ===
@@ -84,10 +84,10 @@ export async function POST(request) {
                             token: registrationTokens[i],
                         });
 
-                        console.log(
-                            "Deleted invalid token:",
-                            registrationTokens[i]
-                        );
+                        // console.log(
+                        //     "Deleted invalid token:",
+                        //     registrationTokens[i]
+                        // );
                     }
                 }
             }
@@ -99,11 +99,11 @@ export async function POST(request) {
 
     } catch (error) {
 
-        console.log("POST /api/rent error:", error);
+        // console.log("POST /api/rent error:", error);
 
         return NextResponse.json(
             {
-                message: "Failed to save rent request",
+                message: "Failed to save Borrow request",
             },
             {
                 status: 500,
@@ -131,11 +131,11 @@ export async function GET() {
 
     } catch (error) {
 
-        console.log("GET /api/rent error:", error);
+        // console.log("GET /api/rent error:", error);
 
         return NextResponse.json(
             {
-                message: "Failed to fetch rent requests",
+                message: "Failed to fetch Borrow requests",
             },
             {
                 status: 500,

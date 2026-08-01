@@ -15,7 +15,7 @@ lg:text-6xl md:text-6xl font-extrabold text-white drop-shadow-lg">
         </h1>
 
         <p className="mt-5 text-lg md:text-xl text-white/90">
-          Buy • Sell • Rent stationery with fellow students.
+          Buy • Sell • Borrow and Rent stationery with fellow students.
         </p>
 
         {/* Buttons */}
@@ -63,7 +63,7 @@ lg:text-6xl md:text-6xl font-extrabold text-white drop-shadow-lg">
               </div>
 
               <h2 className="text-2xl font-bold text-gray-800 group-hover:text-white">
-                Want to Rent Stationery?
+                Want to Borrow Stationery?
               </h2>
 
               <p className="mt-3 text-gray-600 group-hover:text-white">

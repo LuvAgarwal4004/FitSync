@@ -44,7 +44,7 @@ export default function SellPage() {
         const data = await res.json();
         setInitialData(data);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         toast.error("Could not load product for editing.");
         router.replace("/my-activity");
       } finally {

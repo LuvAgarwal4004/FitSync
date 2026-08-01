@@ -41,7 +41,7 @@ export async function GET() {
       { status: 200 }
     );
   } catch (error) {
-    console.log("GET /api/my-activity", error);
+    // console.log("GET /api/my-activity", error);
 
     return NextResponse.json(
       { message: "Something went wrong" },

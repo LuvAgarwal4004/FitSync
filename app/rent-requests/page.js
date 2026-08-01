@@ -23,7 +23,7 @@ export default function RentRequestsPage() {
       const data = await res.json();
       setRequests(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     } finally {
       setLoading(false);
     }
@@ -38,7 +38,7 @@ export default function RentRequestsPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-2xl font-bold">
-        Loading Rent Requests...
+        Loading Borrow Requests...
       </div>
     );
   }
@@ -46,12 +46,12 @@ export default function RentRequestsPage() {
   return (
     <main className="min-h-screen bg-slate-100 p-4 sm:p-6 lg:p-8">
       <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-indigo-700 mb-12">
-        Rent Requests
+        Borrow Requests
       </h1>
 
       {requests.length === 0 ? (
         <div className="text-center text-xl text-gray-500">
-          No rent requests available.
+          No Borrow requests available.
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
