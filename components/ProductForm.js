@@ -179,7 +179,22 @@ export default function ProductForm({
                 value={form.studentName}
                 onChange={handleChange}
                 placeholder="Enter your full name"
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
+                className="
+w-full
+rounded-xl
+border
+border-gray-300
+bg-white
+text-gray-900
+placeholder:text-gray-400
+appearance-none
+color-scheme-light
+px-4
+py-3
+outline-none
+focus:ring-2
+focus:ring-indigo-500
+"
               />
             </div>
 
@@ -194,7 +209,22 @@ export default function ProductForm({
                 value={form.branch}
                 onChange={handleChange}
                 placeholder="Computer Science"
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
+                className="
+w-full
+rounded-xl
+border
+border-gray-300
+bg-white
+text-gray-900
+placeholder:text-gray-400
+appearance-none
+color-scheme-light
+px-4
+py-3
+outline-none
+focus:ring-2
+focus:ring-indigo-500
+"
               />
             </div>
 
@@ -207,7 +237,22 @@ export default function ProductForm({
                 name="year"
                 value={form.year}
                 onChange={handleChange}
-                className="rounded-2xl border border-white/15 bg-white text-black px-4 py-3 outline-none"
+                className="
+w-full
+rounded-xl
+border
+border-gray-300
+bg-white
+text-gray-900
+placeholder:text-gray-400
+appearance-none
+color-scheme-light
+px-4
+py-3
+outline-none
+focus:ring-2
+focus:ring-indigo-500
+"
               >
                 <option value="">
                   Select Year
@@ -231,7 +276,22 @@ export default function ProductForm({
                 value={form.phone}
                 onChange={handleChange}
                 placeholder="9876543210"
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
+                className="
+w-full
+rounded-xl
+border
+border-gray-300
+bg-white
+text-gray-900
+placeholder:text-gray-400
+appearance-none
+color-scheme-light
+px-4
+py-3
+outline-none
+focus:ring-2
+focus:ring-indigo-500
+"
               />
             </div>
 
@@ -246,7 +306,22 @@ export default function ProductForm({
                 value={form.whatsapp}
                 onChange={handleChange}
                 placeholder="9876543210"
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
+                className="
+w-full
+rounded-xl
+border
+border-gray-300
+bg-white
+text-gray-900
+placeholder:text-gray-400
+appearance-none
+color-scheme-light
+px-4
+py-3
+outline-none
+focus:ring-2
+focus:ring-indigo-500
+"
               />
             </div>
 
@@ -272,7 +347,22 @@ export default function ProductForm({
                 value={form.productName}
                 onChange={handleChange}
                 placeholder="Scientific Calculator"
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
+                className="
+w-full
+rounded-xl
+border
+border-gray-300
+bg-white
+text-gray-900
+placeholder:text-gray-400
+appearance-none
+color-scheme-light
+px-4
+py-3
+outline-none
+focus:ring-2
+focus:ring-indigo-500
+"
               />
             </div>
 
@@ -287,7 +377,22 @@ export default function ProductForm({
                 value={form.price}
                 onChange={handleChange}
                 placeholder="500"
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
+                className="
+w-full
+rounded-xl
+border
+border-gray-300
+bg-white
+text-gray-900
+placeholder:text-gray-400
+appearance-none
+color-scheme-light
+px-4
+py-3
+outline-none
+focus:ring-2
+focus:ring-indigo-500
+"
               />
             </div>
 
@@ -300,8 +405,22 @@ export default function ProductForm({
                 name="condition"
                 value={form.condition}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-gray-300 
-                px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
+                className="
+w-full
+rounded-xl
+border
+border-gray-300
+bg-white
+text-gray-900
+placeholder:text-gray-400
+appearance-none
+color-scheme-light
+px-4
+py-3
+outline-none
+focus:ring-2
+focus:ring-indigo-500
+"
               >
                 <option value="">
                   Select Condition
@@ -325,7 +444,22 @@ export default function ProductForm({
                 value={form.description}
                 onChange={handleChange}
                 placeholder="Describe your stationery item..."
-                className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                className="
+w-full
+rounded-xl
+border
+border-gray-300
+bg-white
+text-gray-900
+placeholder:text-gray-400
+appearance-none
+color-scheme-light
+px-4
+py-3
+outline-none
+focus:ring-2
+focus:ring-indigo-500
+"
               />
             </div>
 
