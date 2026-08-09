@@ -22,9 +22,6 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "HITK Stationary",
   description: "Get your style up!",
-  icons: {
-    icon: "/favicon.png",
-  },
 };
 
 export default function RootLayout({ children }) {
