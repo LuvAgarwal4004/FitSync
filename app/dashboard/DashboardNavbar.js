@@ -8,6 +8,8 @@ import {
   Menu,
   X,
   LogOut,
+  Activity,
+  Sparkles,
   LayoutDashboard,
   Dumbbell,
   Utensils,
@@ -282,7 +284,7 @@ export default function DashboardNavbar({ user }) {
           />
           <MobileNavItem
             href="/dashboard/today"
-            icon={<Activity size={24} />}
+            icon={<Activity size={19} />}
             label="Today's Activity"
             onClick={() => setSidebarOpen(false)}
           />
@@ -307,7 +309,7 @@ export default function DashboardNavbar({ user }) {
           />
           <MobileNavItem
             href="/dashboard/insights"
-            icon={<Sparkles size={24} />}
+            icon={<Sparkles size={19} />}
             label="AI Insights"
             onClick={() => setSidebarOpen(false)}
           />
