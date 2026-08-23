@@ -174,7 +174,7 @@ export default async function DashboardPage() {
             description="Your AI can see whether u are skipping meals or excercises and whether u are doing
              excellent and keeping consistent, it upgrades your wokout and nutrition plans accordingly!"
           />
-          
+
           {/* Today */}
 
           <DashboardCard
@@ -187,13 +187,13 @@ export default async function DashboardPage() {
 
           {/* Progress */}
 
-          <DashboardCard
+          {/* <DashboardCard
             href="/dashboard/progress"
             icon={<TrendingUp size={24} />}
             title="My Progress"
             description="Track your workouts, activity, consistency and overall fitness journey."
             action="View progress"
-          />
+          /> */}
 
         </section>
 
@@ -348,7 +348,7 @@ export default async function DashboardPage() {
 
             </div>
 
-            <div className="rounded-3xl border border-[#e1eae5] bg-white p-6 shadow-sm">
+            {/* <div className="rounded-3xl border border-[#e1eae5] bg-white p-6 shadow-sm">
 
               <div className="flex items-center gap-4">
 
@@ -381,7 +381,7 @@ export default async function DashboardPage() {
                 <ChevronRight size={16} />
               </Link>
 
-            </div>
+            </div> */}
 
           </div>
 
