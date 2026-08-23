@@ -95,7 +95,10 @@ const NutritionPlanSchema = new mongoose.Schema(
       index: true,
     },
 
-
+    version: {
+      type: Number,
+      default: 1,
+    },
     // ============================================================
     // AI GENERATED SUMMARY
     // ============================================================

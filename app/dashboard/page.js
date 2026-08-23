@@ -165,6 +165,16 @@ export default async function DashboardPage() {
             description="Talk to your FitSync AI coach about workouts, nutrition, recovery and your fitness journey."
             action="Chat with FitSync AI"
           />
+          {/* AI INSIGHT */}
+
+          <DashboardCard
+            href="/dashboard/insights"
+            icon={<Sparkles size={24} />}
+            title="AI Insights"
+            description="Your AI can see whether u are skipping meals or excercises and whether u are doing
+             excellent and keeping consistent, it upgrades your wokout and nutrition plans accordingly!"
+          />
+          
           {/* Today */}
 
           <DashboardCard
