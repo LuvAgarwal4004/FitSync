@@ -120,9 +120,8 @@ export default function DashboardNavbar({ user }) {
 
               <ChevronDown
                 size={16}
-                className={`hidden text-[#71817a] transition-transform sm:block ${
-                  profileOpen ? "rotate-180" : ""
-                }`}
+                className={`hidden text-[#71817a] transition-transform sm:block ${profileOpen ? "rotate-180" : ""
+                  }`}
               />
 
             </button>
@@ -155,14 +154,14 @@ export default function DashboardNavbar({ user }) {
                   Dashboard
                 </Link>
 
-                <Link
+                {/* <Link
                   href="/dashboard/profile"
                   onClick={() => setProfileOpen(false)}
                   className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-[#53665e] transition hover:bg-[#edf6f0]"
                 >
                   <User size={17} />
                   My Profile
-                </Link>
+                </Link> */}
 
                 <button
                   type="button"
@@ -202,11 +201,10 @@ export default function DashboardNavbar({ user }) {
       ===================================================== */}
 
       <aside
-        className={`fixed left-0 top-0 z-[110] flex h-full w-[285px] flex-col bg-white shadow-2xl transition-transform duration-300 lg:hidden ${
-          sidebarOpen
-            ? "translate-x-0"
-            : "-translate-x-full"
-        }`}
+        className={`fixed left-0 top-0 z-[110] flex h-full w-[285px] flex-col bg-white shadow-2xl transition-transform duration-300 lg:hidden ${sidebarOpen
+          ? "translate-x-0"
+          : "-translate-x-full"
+          }`}
       >
 
         {/* Sidebar header */}
@@ -282,7 +280,12 @@ export default function DashboardNavbar({ user }) {
             label="Dashboard"
             onClick={() => setSidebarOpen(false)}
           />
-
+          <MobileNavItem
+            href="/dashboard/today"
+            icon={<Activity size={24} />}
+            label="Today's Activity"
+            onClick={() => setSidebarOpen(false)}
+          />
           <MobileNavItem
             href="/dashboard/workout"
             icon={<Dumbbell size={19} />}
@@ -296,27 +299,38 @@ export default function DashboardNavbar({ user }) {
             label="Nutrition"
             onClick={() => setSidebarOpen(false)}
           />
-
           <MobileNavItem
+            href="/dashboard/coach"
+            icon={<Sparkles size={19} />}
+            label="AI Coach Chat"
+            onClick={() => setSidebarOpen(false)}
+          />
+          <MobileNavItem
+            href="/dashboard/insights"
+            icon={<Sparkles size={24} />}
+            label="AI Insights"
+            onClick={() => setSidebarOpen(false)}
+          />
+          {/* <MobileNavItem
             href="/dashboard/progress"
             icon={<TrendingUp size={19} />}
             label="My Progress"
             onClick={() => setSidebarOpen(false)}
-          />
+          /> */}
 
-          <MobileNavItem
+          {/* <MobileNavItem
             href="/dashboard/challenges"
             icon={<Trophy size={19} />}
             label="Challenges"
             onClick={() => setSidebarOpen(false)}
-          />
+          /> */}
 
-          <MobileNavItem
+          {/* <MobileNavItem
             href="/dashboard/profile"
             icon={<User size={19} />}
             label="My Profile"
             onClick={() => setSidebarOpen(false)}
-          />
+          /> */}
 
         </nav>
 
