@@ -65,7 +65,7 @@ export default function Navbar() {
   <div className="flex items-center rounded-xl bg-white px-2 py-1 shadow-md">
     <img
       src="/logo1.jpg"
-      alt="HITK Stationary"
+      alt="FitSync Stationary"
       className="h-18 w-auto object-contain"
     />
   </div>

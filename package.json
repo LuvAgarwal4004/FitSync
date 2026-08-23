@@ -1,5 +1,5 @@
 {
-  "name": "HITK Staionary",
+  "name": "FitSync",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,6 +11,8 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@google/genai": "^2.18.0",
+    "@google/generative-ai": "^0.24.1",
     "@mui/icons-material": "^7.3.9",
     "@mui/material": "^7.3.9",
     "bcryptjs": "^3.0.3",
@@ -26,6 +28,7 @@
     "next": "16.1.6",
     "next-auth": "^4.24.13",
     "nodemailer": "^7.0.13",
+    "openai": "^7.5.0",
     "pdfkit": "^0.18.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",

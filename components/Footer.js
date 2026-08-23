@@ -18,7 +18,7 @@ const Footer = () => {
             <div className="text-center md:text-left">
 
               <h2 className="text-2xl font-bold">
-                HITK Stationary
+                FitSync
               </h2>
 
               <p className="text-gray-400 text-sm mt-2">
@@ -67,7 +67,7 @@ const Footer = () => {
 
             © {new Date().getFullYear()}{" "}
             <span className="font-semibold text-white">
-              HITK Stationary
+              FitSync
             </span>
             . All Rights Reserved.
 
