@@ -1,7 +1,9 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+
 import DashboardNavbar from "./DashboardNavbar";
+
 import {
   Dumbbell,
   Utensils,
@@ -16,15 +18,25 @@ import {
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 import connectDB from "@/db/connectDb";
+
 import FitnessProfile from "@/models/FitnessProfile";
+import WorkoutLog from "@/models/WorkoutLog";
+import NutritionLog from "@/models/NutritionLog";
+
+
+// ============================================================
+// DASHBOARD
+// ============================================================
 
 export default async function DashboardPage() {
 
   // ============================================================
-  // 1. CHECK AUTHENTICATION
+  // 1. AUTHENTICATION
   // ============================================================
 
-  const session = await getServerSession(authOptions);
+  const session =
+    await getServerSession(authOptions);
+
 
   if (!session?.user?.id) {
     redirect("/login");
@@ -32,19 +44,21 @@ export default async function DashboardPage() {
 
 
   // ============================================================
-  // 2. CHECK FITNESS ONBOARDING
+  // 2. DATABASE
   // ============================================================
 
   await connectDB();
 
-  const profile = await FitnessProfile.findOne({
-    userId: session.user.id,
-  }).lean();
-
 
   // ============================================================
-  // 3. USER HAS NOT COMPLETED ONBOARDING
+  // 3. FITNESS PROFILE
   // ============================================================
+
+  const profile =
+    await FitnessProfile.findOne({
+      userId: session.user.id,
+    }).lean();
+
 
   if (!profile || !profile.completed) {
     redirect("/onboarding");
@@ -52,14 +66,50 @@ export default async function DashboardPage() {
 
 
   // ============================================================
-  // 4. ONBOARDING COMPLETE
-  //    Continue rendering dashboard
+  // 4. LOAD TRACKING HISTORY
+  // ============================================================
+
+  const workoutLogs =
+    await WorkoutLog.find({
+      userId: session.user.id,
+    })
+      .sort({ date: -1 })
+      .lean();
+
+
+  const nutritionLogs =
+    await NutritionLog.find({
+      userId: session.user.id,
+    })
+      .sort({ date: -1 })
+      .lean();
+
+
+  // ============================================================
+  // 5. CALCULATE DASHBOARD STATS
+  // ============================================================
+
+  const stats = calculateDashboardStats({
+    workoutLogs,
+    nutritionLogs,
+    workoutDaysPerWeek:
+      profile.workoutDays || 0,
+  });
+
+
+  // ============================================================
+  // 6. USER
   // ============================================================
 
   const user = session.user;
 
   const firstName =
     user?.name?.split(" ")[0] || "there";
+
+
+  // ============================================================
+  // 7. RENDER
+  // ============================================================
 
   return (
     <main className="min-h-screen bg-[#f7faf8] text-[#17231e]">
@@ -70,13 +120,17 @@ export default async function DashboardPage() {
 
       <DashboardNavbar user={user} />
 
+
       {/* =====================================================
           DASHBOARD CONTENT
       ===================================================== */}
 
       <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-14">
 
-        {/* Greeting */}
+
+        {/* =====================================================
+            GREETING
+        ===================================================== */}
 
         <section>
 
@@ -95,6 +149,7 @@ export default async function DashboardPage() {
 
         </section>
 
+
         {/* =====================================================
             QUICK STATS
         ===================================================== */}
@@ -104,32 +159,52 @@ export default async function DashboardPage() {
           <StatCard
             icon={<Flame size={21} />}
             label="Current streak"
-            value="0 days"
-            description="Start your streak today"
+            value={`${stats.currentStreak} ${
+              stats.currentStreak === 1
+                ? "day"
+                : "days"
+            }`}
+            description={
+              stats.currentStreak > 0
+                ? "Keep the streak going"
+                : "Start your streak today"
+            }
           />
+
 
           <StatCard
             icon={<Activity size={21} />}
             label="Weekly activity"
-            value="0%"
-            description="No workouts logged yet"
+            value={`${stats.weeklyActivity}%`}
+            description={
+              stats.workoutsCompletedThisWeek > 0
+                ? `${stats.workoutsCompletedThisWeek} workout${
+                    stats.workoutsCompletedThisWeek === 1
+                      ? ""
+                      : "s"
+                  } completed this week`
+                : "No workouts logged this week"
+            }
           />
+
 
           <StatCard
             icon={<Trophy size={21} />}
             label="Rank"
-            value="Bronze"
-            description="Your journey begins here"
+            value={stats.rank}
+            description={`${stats.pointsToNextRank} XP to next rank`}
           />
+
 
           <StatCard
             icon={<TrendingUp size={21} />}
             label="Points"
-            value="0 XP"
-            description="Complete activities to earn XP"
+            value={`${stats.xp} XP`}
+            description="Earn XP by completing activities"
           />
 
         </section>
+
 
         {/* =====================================================
             MAIN ACTIONS
@@ -137,7 +212,8 @@ export default async function DashboardPage() {
 
         <section className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
 
-          {/* AI Workout */}
+
+          {/* AI WORKOUT */}
 
           <DashboardCard
             href="/dashboard/workout"
@@ -147,7 +223,8 @@ export default async function DashboardPage() {
             action="Build my workout"
           />
 
-          {/* Nutrition */}
+
+          {/* NUTRITION */}
 
           <DashboardCard
             href="/dashboard/nutrition"
@@ -156,6 +233,8 @@ export default async function DashboardPage() {
             description="Get personalized general nutrition guidance based on your fitness journey."
             action="Explore nutrition"
           />
+
+
           {/* AI CHAT */}
 
           <DashboardCard
@@ -165,17 +244,20 @@ export default async function DashboardPage() {
             description="Talk to your FitSync AI coach about workouts, nutrition, recovery and your fitness journey."
             action="Chat with FitSync AI"
           />
-          {/* AI INSIGHT */}
+
+
+          {/* AI INSIGHTS */}
 
           <DashboardCard
             href="/dashboard/insights"
             icon={<Sparkles size={24} />}
             title="AI Insights"
-            description="Your AI can see whether u are skipping meals or excercises and whether u are doing
-             excellent and keeping consistent, it upgrades your wokout and nutrition plans accordingly!"
+            description="Your AI can analyze your workout and nutrition history, identify patterns and recommend changes to your plans."
+            action="View AI insights"
           />
 
-          {/* Today */}
+
+          {/* TODAY */}
 
           <DashboardCard
             href="/dashboard/today"
@@ -185,17 +267,8 @@ export default async function DashboardPage() {
             action="Start today's activity"
           />
 
-          {/* Progress */}
-
-          {/* <DashboardCard
-            href="/dashboard/progress"
-            icon={<TrendingUp size={24} />}
-            title="My Progress"
-            description="Track your workouts, activity, consistency and overall fitness journey."
-            action="View progress"
-          /> */}
-
         </section>
+
 
         {/* =====================================================
             AI COACH FEATURE
@@ -234,7 +307,9 @@ export default async function DashboardPage() {
                 Talk to my AI coach
                 <ChevronRight size={17} />
               </Link>
+
             </div>
+
 
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur">
 
@@ -266,12 +341,14 @@ export default async function DashboardPage() {
                       ? profile.equipment.join(", ")
                       : "No equipment",
                   ],
+
                 ].map(([label, value]) => (
 
                   <div
                     key={label}
                     className="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-4"
                   >
+
                     <span className="text-sm text-[#c7d9cf]">
                       {label}
                     </span>
@@ -279,6 +356,7 @@ export default async function DashboardPage() {
                     <span className="text-sm font-semibold text-[#a8cbb7]">
                       {value}
                     </span>
+
                   </div>
 
                 ))}
@@ -291,6 +369,7 @@ export default async function DashboardPage() {
 
         </section>
 
+
         {/* =====================================================
             TODAY
         ===================================================== */}
@@ -300,6 +379,7 @@ export default async function DashboardPage() {
           <div className="flex items-end justify-between">
 
             <div>
+
               <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#5d9c7b]">
                 Today
               </p>
@@ -307,9 +387,11 @@ export default async function DashboardPage() {
               <h2 className="mt-2 text-2xl font-bold text-[#173d30]">
                 Keep moving forward.
               </h2>
+
             </div>
 
           </div>
+
 
           <div className="mt-5 grid gap-5 md:grid-cols-2">
 
@@ -322,66 +404,47 @@ export default async function DashboardPage() {
                 </div>
 
                 <div>
+
                   <p className="text-xs uppercase tracking-wider text-[#8a9992]">
                     Workout
                   </p>
 
                   <h3 className="mt-1 font-bold text-[#24483a]">
-                    No workout planned yet
+
+                    {stats.workoutCompletedToday
+                      ? "Workout completed"
+                      : "Workout not completed yet"}
+
                   </h3>
+
                 </div>
 
               </div>
 
+
               <p className="mt-5 text-sm leading-6 text-[#71817a]">
-                Start today's workout, complete each exercise and
-                track the meals you eat throughout the day.
+
+                {stats.workoutCompletedToday
+                  ? "Great work. Your completed workout has been added to your progress."
+                  : "Start today's workout, complete each exercise and track your progress."}
+
               </p>
+
 
               <Link
                 href="/dashboard/today"
                 className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#397054]"
               >
-                Start today's activity
+
+                {stats.workoutCompletedToday
+                  ? "View today's activity"
+                  : "Start today's activity"}
+
                 <ChevronRight size={16} />
+
               </Link>
 
             </div>
-
-            {/* <div className="rounded-3xl border border-[#e1eae5] bg-white p-6 shadow-sm">
-
-              <div className="flex items-center gap-4">
-
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e1eee7] text-[#397054]">
-                  <Trophy size={22} />
-                </div>
-
-                <div>
-                  <p className="text-xs uppercase tracking-wider text-[#8a9992]">
-                    Challenge
-                  </p>
-
-                  <h3 className="mt-1 font-bold text-[#24483a]">
-                    Ready for your first challenge?
-                  </h3>
-                </div>
-
-              </div>
-
-              <p className="mt-5 text-sm leading-6 text-[#71817a]">
-                Complete activities, earn XP and build your consistency
-                over time.
-              </p>
-
-              <Link
-                href="/dashboard/challenges"
-                className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#397054]"
-              >
-                Explore challenges
-                <ChevronRight size={16} />
-              </Link>
-
-            </div> */}
 
           </div>
 
@@ -394,9 +457,513 @@ export default async function DashboardPage() {
 }
 
 
-/* =========================================================
-   STAT CARD
-========================================================= */
+
+// ============================================================
+// DASHBOARD STAT CALCULATOR
+// ============================================================
+
+function calculateDashboardStats({
+  workoutLogs,
+  nutritionLogs,
+  workoutDaysPerWeek,
+}) {
+
+  // ==========================================================
+  // TODAY
+  // ==========================================================
+
+  const today =
+    getDateString(new Date());
+
+
+  // ==========================================================
+  // WORKOUTS COMPLETED
+  // ==========================================================
+
+  const completedWorkoutLogs =
+    workoutLogs.filter(
+      (log) =>
+        log.status === "completed"
+    );
+
+
+  // ==========================================================
+  // NUTRITION ACTIVITY
+  // ==========================================================
+
+  const nutritionActivity =
+    nutritionLogs.filter(
+      (log) =>
+        Array.isArray(log.meals) &&
+        log.meals.some(
+          (meal) => meal.completed
+        )
+    );
+
+
+  // ==========================================================
+  // CURRENT STREAK
+  // ==========================================================
+
+  /*
+    A day counts toward the streak if the user:
+
+    1. completed a workout
+       OR
+    2. completed at least one nutrition item
+
+    This means the streak represents overall consistency,
+    not only gym sessions.
+  */
+
+  const activityDates =
+    new Set();
+
+
+  completedWorkoutLogs.forEach(
+    (log) => {
+      if (log.date) {
+        activityDates.add(log.date);
+      }
+    }
+  );
+
+
+  nutritionActivity.forEach(
+    (log) => {
+      if (log.date) {
+        activityDates.add(log.date);
+      }
+    }
+  );
+
+
+  const currentStreak =
+    calculateCurrentStreak(
+      activityDates,
+      today
+    );
+
+
+  // ==========================================================
+  // WEEKLY ACTIVITY
+  // ==========================================================
+
+  const lastSevenDays =
+    getLastSevenDates(today);
+
+
+  const workoutDatesThisWeek =
+    new Set(
+      completedWorkoutLogs
+        .filter(
+          (log) =>
+            lastSevenDays.includes(log.date)
+        )
+        .map(
+          (log) => log.date
+        )
+    );
+
+
+  const workoutsCompletedThisWeek =
+    workoutDatesThisWeek.size;
+
+
+  /*
+    Example:
+
+    User requested 4 workouts/week.
+
+    Completed 2 workouts:
+
+    2 / 4 = 50%
+
+    We cap this at 100%.
+  */
+
+  let weeklyActivity = 0;
+
+
+  if (workoutDaysPerWeek > 0) {
+
+    weeklyActivity =
+      Math.round(
+        Math.min(
+          workoutsCompletedThisWeek /
+            workoutDaysPerWeek *
+            100,
+          100
+        )
+      );
+
+  }
+
+
+  // ==========================================================
+  // XP
+  // ==========================================================
+
+  let xp = 0;
+
+
+  // ----------------------------------------------------------
+  // COMPLETED EXERCISES
+  // ----------------------------------------------------------
+
+  workoutLogs.forEach(
+    (log) => {
+
+      if (!Array.isArray(log.exercises)) {
+        return;
+      }
+
+      log.exercises.forEach(
+        (exercise) => {
+
+          if (exercise.completed) {
+            xp += 10;
+          }
+
+        }
+      );
+
+    }
+  );
+
+
+  // ----------------------------------------------------------
+  // COMPLETED MEALS
+  // ----------------------------------------------------------
+
+  nutritionLogs.forEach(
+    (log) => {
+
+      if (!Array.isArray(log.meals)) {
+        return;
+      }
+
+      log.meals.forEach(
+        (meal) => {
+
+          if (meal.completed) {
+            xp += 5;
+          }
+
+        }
+      );
+
+    }
+  );
+
+
+  // ----------------------------------------------------------
+  // WORKOUT COMPLETION BONUS
+  // ----------------------------------------------------------
+
+  completedWorkoutLogs.forEach(
+    () => {
+      xp += 25;
+    }
+  );
+
+
+  // ----------------------------------------------------------
+  // FULL NUTRITION DAY BONUS
+  // ----------------------------------------------------------
+
+  nutritionLogs.forEach(
+    (log) => {
+
+      if (!Array.isArray(log.meals)) {
+        return;
+      }
+
+      if (
+        log.meals.length > 0 &&
+        log.meals.every(
+          (meal) => meal.completed
+        )
+      ) {
+        xp += 25;
+      }
+
+    }
+  );
+
+
+  // ==========================================================
+  // RANK
+  // ==========================================================
+
+  const rankInfo =
+    calculateRank(xp);
+
+
+  // ==========================================================
+  // TODAY'S WORKOUT
+  // ==========================================================
+
+  const todayWorkout =
+    workoutLogs.find(
+      (log) =>
+        log.date === today
+    );
+
+
+  const workoutCompletedToday =
+    todayWorkout?.status ===
+    "completed";
+
+
+  // ==========================================================
+  // RETURN
+  // ==========================================================
+
+  return {
+
+    currentStreak,
+
+    weeklyActivity,
+
+    workoutsCompletedThisWeek,
+
+    xp,
+
+    rank:
+      rankInfo.rank,
+
+    pointsToNextRank:
+      rankInfo.pointsToNextRank,
+
+    workoutCompletedToday,
+
+  };
+
+}
+
+
+
+// ============================================================
+// STREAK CALCULATOR
+// ============================================================
+
+function calculateCurrentStreak(
+  activityDates,
+  today
+) {
+
+  let streak = 0;
+
+
+  let cursor =
+    parseDateString(today);
+
+
+  /*
+    If today has no activity yet, allow the streak
+    to continue from yesterday.
+
+    Example:
+
+    Mon = activity
+    Tue = activity
+    Wed = no activity
+
+    On Wednesday the user still has a 2-day streak.
+  */
+
+  if (
+    !activityDates.has(today)
+  ) {
+
+    cursor.setDate(
+      cursor.getDate() - 1
+    );
+
+  }
+
+
+  while (true) {
+
+    const date =
+      formatDate(cursor);
+
+
+    if (
+      !activityDates.has(date)
+    ) {
+      break;
+    }
+
+
+    streak++;
+
+
+    cursor.setDate(
+      cursor.getDate() - 1
+    );
+
+  }
+
+
+  return streak;
+
+}
+
+
+
+// ============================================================
+// LAST 7 DAYS
+// ============================================================
+
+function getLastSevenDates(today) {
+
+  const dates = [];
+
+  const cursor =
+    parseDateString(today);
+
+
+  for (
+    let i = 0;
+    i < 7;
+    i++
+  ) {
+
+    dates.push(
+      formatDate(cursor)
+    );
+
+
+    cursor.setDate(
+      cursor.getDate() - 1
+    );
+
+  }
+
+
+  return dates;
+
+}
+
+
+
+// ============================================================
+// RANK SYSTEM
+// ============================================================
+
+function calculateRank(xp) {
+
+  if (xp >= 5000) {
+
+    return {
+      rank: "Diamond",
+      pointsToNextRank: 0,
+    };
+
+  }
+
+
+  if (xp >= 2500) {
+
+    return {
+      rank: "Platinum",
+      pointsToNextRank: 5000 - xp,
+    };
+
+  }
+
+
+  if (xp >= 1000) {
+
+    return {
+      rank: "Gold",
+      pointsToNextRank: 2500 - xp,
+    };
+
+  }
+
+
+  if (xp >= 500) {
+
+    return {
+      rank: "Silver",
+      pointsToNextRank: 1000 - xp,
+    };
+
+  }
+
+
+  return {
+    rank: "Bronze",
+    pointsToNextRank: 500 - xp,
+  };
+
+}
+
+
+
+// ============================================================
+// DATE HELPERS
+// ============================================================
+
+function getDateString(date) {
+
+  return date
+    .toISOString()
+    .split("T")[0];
+
+}
+
+
+function parseDateString(dateString) {
+
+  const [
+    year,
+    month,
+    day,
+  ] = dateString
+    .split("-")
+    .map(Number);
+
+
+  return new Date(
+    year,
+    month - 1,
+    day
+  );
+
+}
+
+
+function formatDate(date) {
+
+  const year =
+    date.getFullYear();
+
+
+  const month =
+    String(
+      date.getMonth() + 1
+    ).padStart(2, "0");
+
+
+  const day =
+    String(
+      date.getDate()
+    ).padStart(2, "0");
+
+
+  return `${year}-${month}-${day}`;
+
+}
+
+
+
+// ============================================================
+// STAT CARD
+// ============================================================
 
 function StatCard({
   icon,
@@ -404,37 +971,47 @@ function StatCard({
   value,
   description,
 }) {
+
   return (
+
     <div className="rounded-3xl border border-[#e1eae5] bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
 
       <div className="flex items-center justify-between">
 
         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#e1eee7] text-[#397054]">
+
           {icon}
+
         </div>
 
       </div>
+
 
       <p className="mt-6 text-xs font-semibold uppercase tracking-wider text-[#8a9992]">
         {label}
       </p>
 
+
       <p className="mt-1 text-2xl font-bold text-[#173d30]">
         {value}
       </p>
+
 
       <p className="mt-2 text-xs text-[#82918a]">
         {description}
       </p>
 
     </div>
+
   );
+
 }
 
 
-/* =========================================================
-   DASHBOARD CARD
-========================================================= */
+
+// ============================================================
+// DASHBOARD CARD
+// ============================================================
 
 function DashboardCard({
   href,
@@ -443,44 +1020,67 @@ function DashboardCard({
   description,
   action,
 }) {
+
   return (
+
     <Link
       href={href}
       className="group rounded-[2rem] border border-[#e1eae5] bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#c5ddd0] hover:shadow-xl"
     >
 
       <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e1eee7] text-[#397054] transition-transform duration-300 group-hover:scale-110">
+
         {icon}
+
       </div>
+
 
       <h3 className="mt-6 text-xl font-bold text-[#24483a]">
         {title}
       </h3>
 
+
       <p className="mt-3 text-sm leading-7 text-[#71817a]">
         {description}
       </p>
 
+
       <div className="mt-6 flex items-center gap-2 text-sm font-bold text-[#397054]">
+
         {action}
+
         <ChevronRight
           size={16}
           className="transition-transform group-hover:translate-x-1"
         />
+
       </div>
 
     </Link>
+
   );
+
 }
+
+
+
+// ============================================================
+// PROFILE FORMATTER
+// ============================================================
+
 function formatProfileValue(value) {
 
   if (!value) {
     return "Not specified";
   }
 
+
   return String(value)
     .replaceAll("_", " ")
-    .replace(/\b\w/g, (letter) =>
-      letter.toUpperCase()
+    .replace(
+      /\b\w/g,
+      (letter) =>
+        letter.toUpperCase()
     );
+
 }
