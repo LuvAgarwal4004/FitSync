@@ -14,7 +14,7 @@ import {
   ChevronRight,
   Activity,
 } from "lucide-react";
-
+import DashboardStats from "./DashboardStats";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 import connectDB from "@/db/connectDb";
@@ -154,16 +154,15 @@ export default async function DashboardPage() {
             QUICK STATS
         ===================================================== */}
 
-        <section className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* <section className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
           <StatCard
             icon={<Flame size={21} />}
             label="Current streak"
-            value={`${stats.currentStreak} ${
-              stats.currentStreak === 1
+            value={`${stats.currentStreak} ${stats.currentStreak === 1
                 ? "day"
                 : "days"
-            }`}
+              }`}
             description={
               stats.currentStreak > 0
                 ? "Keep the streak going"
@@ -178,11 +177,10 @@ export default async function DashboardPage() {
             value={`${stats.weeklyActivity}%`}
             description={
               stats.workoutsCompletedThisWeek > 0
-                ? `${stats.workoutsCompletedThisWeek} workout${
-                    stats.workoutsCompletedThisWeek === 1
-                      ? ""
-                      : "s"
-                  } completed this week`
+                ? `${stats.workoutsCompletedThisWeek} workout${stats.workoutsCompletedThisWeek === 1
+                  ? ""
+                  : "s"
+                } completed this week`
                 : "No workouts logged this week"
             }
           />
@@ -203,8 +201,8 @@ export default async function DashboardPage() {
             description="Earn XP by completing activities"
           />
 
-        </section>
-
+        </section> */}
+        <DashboardStats />
 
         {/* =====================================================
             MAIN ACTIONS
@@ -265,6 +263,15 @@ export default async function DashboardPage() {
             title="Today's Activity"
             description="Start your workout, complete exercises and track the meals you eat today."
             action="Start today's activity"
+          />
+          {/* My Progress */}
+
+          <DashboardCard
+            href="/dashboard/progress"
+            icon={<TrendingUp size={24} />}
+            title="My Progress"
+            description="See your workout consistency, nutrition adherence, streaks, XP and fitness history."
+            action="View my progress"
           />
 
         </section>
@@ -591,8 +598,8 @@ function calculateDashboardStats({
       Math.round(
         Math.min(
           workoutsCompletedThisWeek /
-            workoutDaysPerWeek *
-            100,
+          workoutDaysPerWeek *
+          100,
           100
         )
       );
