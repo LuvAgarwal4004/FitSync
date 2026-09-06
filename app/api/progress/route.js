@@ -15,9 +15,7 @@ import FitnessProfile from "@/models/FitnessProfile";
 // ============================================================
 
 function getDateString(date) {
-
   return date.toISOString().split("T")[0];
-
 }
 
 
@@ -25,23 +23,39 @@ function getDateDaysAgo(days) {
 
   const date = new Date();
 
-  date.setDate(date.getDate() - days);
+  date.setDate(
+    date.getDate() - days
+  );
 
   return getDateString(date);
 
 }
 
 
+function getDateObject(dateString) {
+
+  const [
+    year,
+    month,
+    day,
+  ] = dateString
+    .split("-")
+    .map(Number);
+
+  return new Date(
+    year,
+    month - 1,
+    day
+  );
+
+}
+
+
 // ============================================================
-// CALCULATE CURRENT STREAK
+// CURRENT STREAK
 // ============================================================
 
 function calculateWorkoutStreak(workoutLogs) {
-
-  if (!workoutLogs.length) {
-    return 0;
-  }
-
 
   const completedDates = new Set(
     workoutLogs
@@ -50,9 +64,15 @@ function calculateWorkoutStreak(workoutLogs) {
           log.status === "completed"
       )
       .map(
-        (log) => log.date
+        (log) =>
+          log.date
       )
   );
+
+
+  if (!completedDates.size) {
+    return 0;
+  }
 
 
   let streak = 0;
@@ -61,9 +81,15 @@ function calculateWorkoutStreak(workoutLogs) {
     new Date();
 
 
-  for (let i = 0; i < 365; i++) {
+  for (
+    let i = 0;
+    i < 365;
+    i++
+  ) {
 
-    const date = new Date(today);
+    const date =
+      new Date(today);
+
 
     date.setDate(
       today.getDate() - i
@@ -82,10 +108,7 @@ function calculateWorkoutStreak(workoutLogs) {
 
     } else {
 
-      // Allow today to be incomplete
-      // without immediately breaking
-      // yesterday's streak.
-
+      // Today may still be incomplete.
       if (i === 0) {
         continue;
       }
@@ -103,21 +126,23 @@ function calculateWorkoutStreak(workoutLogs) {
 
 
 // ============================================================
-// CALCULATE BEST STREAK
+// BEST STREAK
 // ============================================================
 
 function calculateBestStreak(workoutLogs) {
 
-  const completedDates = new Set(
-    workoutLogs
-      .filter(
-        (log) =>
-          log.status === "completed"
-      )
-      .map(
-        (log) => log.date
-      )
-  );
+  const completedDates =
+    new Set(
+      workoutLogs
+        .filter(
+          (log) =>
+            log.status === "completed"
+        )
+        .map(
+          (log) =>
+            log.date
+        )
+    );
 
 
   if (!completedDates.size) {
@@ -126,11 +151,13 @@ function calculateBestStreak(workoutLogs) {
 
 
   const sortedDates =
-    Array.from(completedDates)
-      .sort();
+    Array.from(
+      completedDates
+    ).sort();
 
 
   let best = 1;
+
   let current = 1;
 
 
@@ -141,26 +168,33 @@ function calculateBestStreak(workoutLogs) {
   ) {
 
     const previous =
-      new Date(
-        `${sortedDates[i - 1]}T00:00:00`
+      getDateObject(
+        sortedDates[i - 1]
       );
 
+
     const currentDate =
-      new Date(
-        `${sortedDates[i]}T00:00:00`
+      getDateObject(
+        sortedDates[i]
       );
 
 
     const difference =
       (
-        currentDate - previous
+        currentDate -
+        previous
       ) /
       (
-        1000 * 60 * 60 * 24
+        1000 *
+        60 *
+        60 *
+        24
       );
 
 
-    if (difference === 1) {
+    if (
+      difference === 1
+    ) {
 
       current++;
 
@@ -197,8 +231,10 @@ function calculateXP({
   const workoutXP =
     completedWorkouts * 100;
 
+
   const exerciseXP =
     completedExercises * 10;
+
 
   const mealXP =
     completedMeals * 20;
@@ -223,17 +259,21 @@ function calculateRank(xp) {
     return "Diamond";
   }
 
+
   if (xp >= 2500) {
     return "Platinum";
   }
+
 
   if (xp >= 1000) {
     return "Gold";
   }
 
+
   if (xp >= 500) {
     return "Silver";
   }
+
 
   return "Bronze";
 
@@ -295,6 +335,304 @@ function getNextRank(xp) {
 
 
 // ============================================================
+// DAILY ANALYTICS
+// ============================================================
+
+function buildDailyActivity({
+  workoutLogs,
+  nutritionLogs,
+}) {
+
+  const today =
+    getDateString(
+      new Date()
+    );
+
+
+  const days = [];
+
+
+  for (
+    let i = 29;
+    i >= 0;
+    i--
+  ) {
+
+    const date =
+      getDateDaysAgo(i);
+
+
+    const workout =
+      workoutLogs.find(
+        (log) =>
+          log.date === date
+      );
+
+
+    const nutrition =
+      nutritionLogs.find(
+        (log) =>
+          log.date === date
+      );
+
+
+    const exercises =
+      workout?.exercises || [];
+
+
+    const meals =
+      nutrition?.meals || [];
+
+
+    const completedExercises =
+      exercises.filter(
+        (exercise) =>
+          exercise.completed
+      ).length;
+
+
+    const completedMeals =
+      meals.filter(
+        (meal) =>
+          meal.completed
+      ).length;
+
+
+    const workoutCompleted =
+      workout?.status ===
+      "completed";
+
+
+    const workoutExerciseCompletion =
+      exercises.length > 0
+        ? Math.round(
+            (
+              completedExercises /
+              exercises.length
+            ) * 100
+          )
+        : 0;
+
+
+    const nutritionCompletion =
+      meals.length > 0
+        ? Math.round(
+            (
+              completedMeals /
+              meals.length
+            ) * 100
+          )
+        : 0;
+
+
+    days.push({
+
+      date,
+
+      isToday:
+        date === today,
+
+      workout: {
+
+        exists:
+          !!workout,
+
+        completed:
+          workoutCompleted,
+
+        exercises:
+          exercises.length,
+
+        completedExercises,
+
+        completion:
+          workoutExerciseCompletion,
+
+      },
+
+      nutrition: {
+
+        exists:
+          !!nutrition,
+
+        meals:
+          meals.length,
+
+        completedMeals,
+
+        completion:
+          nutritionCompletion,
+
+      },
+
+      activity:
+        workoutCompleted ||
+        completedMeals > 0,
+
+    });
+
+  }
+
+
+  return days;
+
+}
+
+
+// ============================================================
+// WEEKLY ANALYTICS
+// ============================================================
+
+function buildWeeklyAnalytics({
+  workoutLogs,
+  nutritionLogs,
+  targetWorkoutDays,
+}) {
+
+  const weeks = [];
+
+
+  for (
+    let week = 3;
+    week >= 0;
+    week--
+  ) {
+
+    const endOffset =
+      week * 7;
+
+
+    const startOffset =
+      endOffset + 6;
+
+
+    const startDate =
+      getDateDaysAgo(
+        startOffset
+      );
+
+
+    const endDate =
+      getDateDaysAgo(
+        endOffset
+      );
+
+
+    const weeklyWorkoutLogs =
+      workoutLogs.filter(
+        (log) =>
+          log.date >= startDate &&
+          log.date <= endDate
+      );
+
+
+    const weeklyNutritionLogs =
+      nutritionLogs.filter(
+        (log) =>
+          log.date >= startDate &&
+          log.date <= endDate
+      );
+
+
+    const completedWorkouts =
+      weeklyWorkoutLogs.filter(
+        (log) =>
+          log.status === "completed"
+      ).length;
+
+
+    const totalMeals =
+      weeklyNutritionLogs.reduce(
+        (total, log) =>
+          total +
+          (log.meals || []).length,
+        0
+      );
+
+
+    const completedMeals =
+      weeklyNutritionLogs.reduce(
+        (total, log) =>
+          total +
+          (log.meals || []).filter(
+            (meal) =>
+              meal.completed
+          ).length,
+        0
+      );
+
+
+    const workoutCompletion =
+      targetWorkoutDays > 0
+        ? Math.min(
+            100,
+            Math.round(
+              (
+                completedWorkouts /
+                targetWorkoutDays
+              ) * 100
+            )
+          )
+        : 0;
+
+
+    const nutritionCompletion =
+      totalMeals > 0
+        ? Math.round(
+            (
+              completedMeals /
+              totalMeals
+            ) * 100
+          )
+        : 0;
+
+
+    const overallConsistency =
+      Math.round(
+        (
+          workoutCompletion +
+          nutritionCompletion
+        ) / 2
+      );
+
+
+    weeks.push({
+
+      week:
+        4 - week,
+
+      from:
+        startDate,
+
+      to:
+        endDate,
+
+      completedWorkouts,
+
+      targetWorkouts:
+        targetWorkoutDays,
+
+      workoutCompletion,
+
+      completedMeals,
+
+      totalMeals,
+
+      nutritionCompletion,
+
+      overallConsistency,
+
+    });
+
+  }
+
+
+  return weeks;
+
+}
+
+
+// ============================================================
 // GET PROGRESS
 // ============================================================
 
@@ -303,7 +641,7 @@ export async function GET() {
   try {
 
     // ========================================================
-    // AUTH
+    // AUTHENTICATION
     // ========================================================
 
     const session =
@@ -347,11 +685,13 @@ export async function GET() {
         new Date()
       );
 
+
     const thirtyDaysAgo =
       getDateDaysAgo(30);
 
+
     const sevenDaysAgo =
-      getDateDaysAgo(7);
+      getDateDaysAgo(6);
 
 
     // ========================================================
@@ -376,6 +716,7 @@ export async function GET() {
         })
         .lean(),
 
+
       NutritionLog.find({
         userId,
         date: {
@@ -387,6 +728,7 @@ export async function GET() {
           date: 1,
         })
         .lean(),
+
 
       FitnessProfile.findOne({
         userId,
@@ -464,7 +806,8 @@ export async function GET() {
     const weeklyWorkoutLogs =
       workoutLogs.filter(
         (log) =>
-          log.date >= sevenDaysAgo
+          log.date >=
+          sevenDaysAgo
       );
 
 
@@ -494,7 +837,7 @@ export async function GET() {
 
 
     // ========================================================
-    // NUTRITION STATISTICS
+    // NUTRITION
     // ========================================================
 
     const totalMeals =
@@ -585,6 +928,36 @@ export async function GET() {
 
 
     // ========================================================
+    // DAILY ANALYTICS
+    // ========================================================
+
+    const dailyActivity =
+      buildDailyActivity({
+
+        workoutLogs,
+
+        nutritionLogs,
+
+      });
+
+
+    // ========================================================
+    // WEEKLY ANALYTICS
+    // ========================================================
+
+    const weeklyAnalytics =
+      buildWeeklyAnalytics({
+
+        workoutLogs,
+
+        nutritionLogs,
+
+        targetWorkoutDays,
+
+      });
+
+
+    // ========================================================
     // RECENT HISTORY
     // ========================================================
 
@@ -593,12 +966,17 @@ export async function GET() {
 
     const historyDates =
       new Set([
+
         ...workoutLogs.map(
-          (log) => log.date
+          (log) =>
+            log.date
         ),
+
         ...nutritionLogs.map(
-          (log) => log.date
+          (log) =>
+            log.date
         ),
+
       ]);
 
 
@@ -606,79 +984,87 @@ export async function GET() {
       .sort()
       .reverse()
       .slice(0, 14)
-      .forEach((date) => {
+      .forEach(
+        (date) => {
 
-        const workout =
-          workoutLogs.find(
-            (log) =>
-              log.date === date
-          );
-
-
-        const nutrition =
-          nutritionLogs.find(
-            (log) =>
-              log.date === date
-          );
+          const workout =
+            workoutLogs.find(
+              (log) =>
+                log.date ===
+                date
+            );
 
 
-        const exercises =
-          workout?.exercises || [];
+          const nutrition =
+            nutritionLogs.find(
+              (log) =>
+                log.date ===
+                date
+            );
 
 
-        const meals =
-          nutrition?.meals || [];
+          const exercises =
+            workout?.exercises ||
+            [];
 
 
-        const completedExerciseCount =
-          exercises.filter(
-            (exercise) =>
-              exercise.completed
-          ).length;
+          const meals =
+            nutrition?.meals ||
+            [];
 
 
-        const completedMealCount =
-          meals.filter(
-            (meal) =>
-              meal.completed
-          ).length;
+          const completedExerciseCount =
+            exercises.filter(
+              (exercise) =>
+                exercise.completed
+            ).length;
 
 
-        recentHistory.push({
+          const completedMealCount =
+            meals.filter(
+              (meal) =>
+                meal.completed
+            ).length;
 
-          date,
 
-          workout: {
+          recentHistory.push({
 
-            exists: !!workout,
+            date,
 
-            completed:
-              workout?.status ===
-              "completed",
+            workout: {
 
-            exercises:
-              exercises.length,
+              exists:
+                !!workout,
 
-            completedExercises:
-              completedExerciseCount,
+              completed:
+                workout?.status ===
+                "completed",
 
-          },
+              exercises:
+                exercises.length,
 
-          nutrition: {
+              completedExercises:
+                completedExerciseCount,
 
-            exists: !!nutrition,
+            },
 
-            meals:
-              meals.length,
+            nutrition: {
 
-            completedMeals:
-              completedMealCount,
+              exists:
+                !!nutrition,
 
-          },
+              meals:
+                meals.length,
 
-        });
+              completedMeals:
+                completedMealCount,
 
-      });
+            },
+
+          });
+
+        }
+      );
 
 
     // ========================================================
@@ -689,10 +1075,17 @@ export async function GET() {
 
       success: true,
 
+
       period: {
-        from: thirtyDaysAgo,
-        to: today,
+
+        from:
+          thirtyDaysAgo,
+
+        to:
+          today,
+
       },
+
 
       workout: {
 
@@ -722,6 +1115,7 @@ export async function GET() {
 
       },
 
+
       nutrition: {
 
         completedMeals,
@@ -733,6 +1127,7 @@ export async function GET() {
 
       },
 
+
       streak: {
 
         current:
@@ -742,6 +1137,7 @@ export async function GET() {
           bestStreak,
 
       },
+
 
       gamification: {
 
@@ -759,10 +1155,19 @@ export async function GET() {
 
       },
 
+
+      analytics: {
+
+        dailyActivity,
+
+        weeklyAnalytics,
+
+      },
+
+
       recentHistory,
 
     });
-
 
   } catch (error) {
 

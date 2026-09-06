@@ -16,7 +16,7 @@ import {
   Zap,
 } from "lucide-react";
 
-
+import ProgressAnalytics from "./ProgressAnalytics";
 export default function ProgressPage() {
 
   const [data, setData] =
@@ -407,7 +407,13 @@ export default function ProgressPage() {
 
         </section>
 
+        {/* =====================================================
+            ADVANCED ANALYTICS
+        ===================================================== */}
 
+        <ProgressAnalytics
+          analytics={data.analytics}
+        />
         {/* =====================================================
             RECENT HISTORY
         ===================================================== */}
@@ -768,7 +774,7 @@ function HistoryRow({
         <div className="flex items-center gap-2 rounded-full bg-[#f3f6f4] px-4 py-2">
 
           {day.nutrition.completedMeals >
-          0 ? (
+            0 ? (
 
             <CheckCircle2
               size={16}
