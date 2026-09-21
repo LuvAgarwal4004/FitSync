@@ -3,10 +3,10 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SessionWrapper from "@/components/SessionWrapper";
-// import { CartProvider } from "@/context/CartContext";
+import { CartProvider } from "@/context/CartContext";
 import RouteLoader from "@/components/RouteLoader";
 import { Toaster } from "react-hot-toast";
-// import { CheckoutProvider } from "@/context/CheckoutContext";
+import { CheckoutProvider } from "@/context/CheckoutContext";
 import NotificationProvider from "@/components/NotificationProvider";
 
 const geistSans = Geist({
@@ -32,9 +32,9 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionWrapper>
           <NotificationProvider />
-          {/* <CartProvider> */}
+          <CartProvider>
             <RouteLoader>
-              {/* <CheckoutProvider> */}
+              <CheckoutProvider>
 
 
               {/* <Navbar /> */}
@@ -44,9 +44,9 @@ export default function RootLayout({ children }) {
 
               </div>
               <Footer />
-              {/* </CheckoutProvider> */}
+              </CheckoutProvider>
             </RouteLoader>
-          {/* </CartProvider> */}
+          </CartProvider>
         </SessionWrapper>
         <Toaster
           position="top-center"

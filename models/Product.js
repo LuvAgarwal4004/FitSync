@@ -1,66 +1,37 @@
 import mongoose from "mongoose";
 
-const ProductSchema = new mongoose.Schema(
-  {
-    owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    studentName: {
-      type: String,
-      required: true,
-    },
-
-    branch: {
-      type: String,
-      required: true,
-    },
-
-    year: {
-      type: String,
-      required: true,
-    },
-
-    phone: {
-      type: String,
-      required: true,
-    },
-
-    whatsapp: {
-      type: String,
-      required: true,
-    },
-
-    productName: {
-      type: String,
-      required: true,
-    },
-
-    price: {
-      type: Number,
-      required: true,
-    },
-
-    condition: {
-      type: String,
-      required: true,
-    },
-
-    description: {
-      type: String,
-      // required: true,
-    },
-
-    image: {
-      type: String,
-      required: true,
-    },
+const ProductSchema = new mongoose.Schema({
+  title: String,
+  price: Number,
+  image: String,
+  category: String,
+  collection: String,
+  collectionId: String,
+  sequence: Number,
+  description: String,
+  oldPrice: {
+    type: Number,
+    default: null
   },
-  {
-    timestamps: true,
-  }
-);
+
+  isDiscount: {
+    type: Boolean,
+    default: false
+  },
+  specifications: {
+    type: String,
+    default: ""
+  },
+  discountPercent: {
+    type: Number,
+    default: 0
+  },
+  discountedPrice: {
+    type: Number,
+    default: null
+  },
+  createdAt: { type: Date, default: Date.now }
+});
 
 export default mongoose.models.Product ||
   mongoose.model("Product", ProductSchema);
