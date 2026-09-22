@@ -5,8 +5,8 @@ import { useSession, signOut } from "next-auth/react"
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { useCart } from "@/context/CartContext";
-import SmartLink from './SmartLink';
-import { signOut } from "next-auth/react";
+import SmartLink from '@/components/SmartLink';
+// import { signOut } from "next-auth/react";
 import Link from "next/link";
 
 import {

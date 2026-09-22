@@ -5,7 +5,7 @@ import { useSession, signOut } from "next-auth/react"
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { useCart } from "@/context/CartContext";
-import SmartLink from './SmartLink';
+import SmartLink from '@/components/SmartLink';
 import {
     Menu,
     X,

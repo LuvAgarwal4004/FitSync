@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import useEmblaCarousel from "embla-carousel-react"
 import Autoplay from "embla-carousel-autoplay"
-import { images } from "@/components/util";
+// import { images } from "@/components/util";
 import SmartLink from "@/components/SmartLink";
 
 export default function MarketPage() {

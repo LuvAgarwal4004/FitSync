@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
-import SmartLink from "./SmartLink";
+import SmartLink from "@/components/SmartLink";
 import {
   Menu,
   X,

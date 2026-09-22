@@ -6,7 +6,7 @@ import SessionWrapper from "@/components/SessionWrapper";
 import { CartProvider } from "@/context/CartContext";
 import RouteLoader from "@/components/RouteLoader";
 import { Toaster } from "react-hot-toast";
-import { CheckoutProvider } from "@/context/CheckoutContext";
+// import { CheckoutProvider } from "@/context/CheckoutContext";
 import NotificationProvider from "@/components/NotificationProvider";
 
 const geistSans = Geist({
@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
           <NotificationProvider />
           <CartProvider>
             <RouteLoader>
-              <CheckoutProvider>
+              {/* <CheckoutProvider> */}
 
 
               {/* <Navbar /> */}
@@ -44,7 +44,7 @@ export default function RootLayout({ children }) {
 
               </div>
               <Footer />
-              </CheckoutProvider>
+              {/* </CheckoutProvider> */}
             </RouteLoader>
           </CartProvider>
         </SessionWrapper>

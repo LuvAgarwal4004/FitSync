@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import FilterSidebar from "./FilterSidebar";
-import SmartLink from "./SmartLink";
+import SmartLink from "@/components/SmartLink";
 import Image from "next/image";
 import MobileFilterDrawer from "@/components/MobileFilterDrawer";
 
