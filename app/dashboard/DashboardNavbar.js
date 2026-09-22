@@ -155,13 +155,14 @@ transition
 
           {/* <div className="relative"> */}
 
-          <button
+          {/* <button
             type="button"
             onClick={() =>
               setProfileOpen((previous) => !previous)
             }
-            className="flex items-center gap-3 rounded-2xl px-2 py-1.5 transition hover:bg-[#eaf2ed]"
-          >
+            className="flex items-center 
+            gap-3 rounded-2xl px-2 py-1.5 transition hover:bg-[#eaf2ed]"
+          > */}
 
             {/* <div className="hidden text-right sm:block">
 
@@ -187,7 +188,7 @@ transition
                 }`}
             /> */}
 
-          </button>
+          {/* </button> */}
 
           {/* =================================================
                 PROFILE DROPDOWN
