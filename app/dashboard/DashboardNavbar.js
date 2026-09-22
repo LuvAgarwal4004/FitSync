@@ -18,6 +18,7 @@ import {
   LayoutDashboard,
   Dumbbell,
   Utensils,
+  Phone,
   TrendingUp,
   Trophy,
   User,
