@@ -19,6 +19,7 @@ import {
   Dumbbell,
   Utensils,
   Phone,
+  Package,
   TrendingUp,
   Trophy,
   User,

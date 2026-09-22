@@ -89,7 +89,7 @@ mr-2
                             <Menu size={28} />
                         </button>
                         <SmartLink href="/">
-                            <img src="/logo.jpg" alt="Your Company" className="
+                            <img src="/icon.png" alt="Your Company" className="
 h-16
 md:h-20
 w-auto
