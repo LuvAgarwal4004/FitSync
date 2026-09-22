@@ -195,9 +195,9 @@ transition
             ================================================= */}
 
           {/* {profileOpen && ( */}
-            <div className="absolute right-0 top-14 z-50 w-64 overflow-hidden rounded-2xl border border-[#dfe9e3] bg-white p-2 shadow-xl">
+            {/* <div className="absolute right-0 top-14 z-50 w-64 overflow-hidden rounded-2xl border border-[#dfe9e3] bg-white p-2 shadow-xl"> */}
 
-              <div className="border-b border-[#edf1ee] px-4 py-3">
+              {/* <div className="border-b border-[#edf1ee] px-4 py-3">
 
                 <p className="text-sm font-bold text-[#24483a]">
                   {user?.name || "FitSync User"}
@@ -227,7 +227,7 @@ transition
                   My Profile
                 </Link> */}
 
-              <button
+              {/* <button
                 type="button"
                 onClick={handleLogout}
                 disabled={loggingOut}
@@ -238,9 +238,10 @@ transition
                 {loggingOut
                   ? "Logging out..."
                   : "Logout"}
-              </button>
+              </button>  */}
+              
 
-            </div>
+            {/* </div> */}
           {/* )} */}
 
           {/* </div> */}
@@ -588,9 +589,9 @@ hover:text-cyan-400
 
         {/* Logout */}
 
-        <div className="border-t border-[#e4ebe7] p-4">
+        {/* <div className="border-t border-[#e4ebe7] p-4"> */}
 
-          <button
+          {/* <button
             type="button"
             onClick={handleLogout}
             disabled={loggingOut}
@@ -604,9 +605,9 @@ hover:text-cyan-400
               ? "Logging out..."
               : "Logout"}
 
-          </button>
+          </button> */}
 
-        </div>
+        {/* </div> */}
 
       </aside>
     </>
