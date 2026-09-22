@@ -163,7 +163,7 @@ transition
             className="flex items-center gap-3 rounded-2xl px-2 py-1.5 transition hover:bg-[#eaf2ed]"
           >
 
-            <div className="hidden text-right sm:block">
+            {/* <div className="hidden text-right sm:block">
 
               <p className="text-sm font-bold text-[#24483a]">
                 {user?.name || "FitSync User"}
@@ -173,17 +173,19 @@ transition
                 Your fitness journey
               </p>
 
-            </div>
+            </div> */}
 
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#dceee3] font-bold text-[#397054]">
+            {/* <div className="flex h-10 w-10 items-center justify-center
+             rounded-full bg-[#dceee3] font-bold text-[#397054]">
               {firstLetter}
             </div>
 
             <ChevronDown
               size={16}
-              className={`hidden text-[#71817a] transition-transform sm:block ${profileOpen ? "rotate-180" : ""
+              className={`hidden text-[#71817a] 
+                transition-transform sm:block ${profileOpen ? "rotate-180" : ""
                 }`}
-            />
+            /> */}
 
           </button>
 
@@ -191,7 +193,7 @@ transition
                 PROFILE DROPDOWN
             ================================================= */}
 
-          {profileOpen && (
+          {/* {profileOpen && ( */}
             <div className="absolute right-0 top-14 z-50 w-64 overflow-hidden rounded-2xl border border-[#dfe9e3] bg-white p-2 shadow-xl">
 
               <div className="border-b border-[#edf1ee] px-4 py-3">
@@ -238,7 +240,7 @@ transition
               </button>
 
             </div>
-          )}
+          {/* )} */}
 
           {/* </div> */}
           <div className="flex flex-1 items-center justify-center 
@@ -433,9 +435,9 @@ hover:text-cyan-400
                 FitSync
               </div>
 
-              <div className="text-[9px] uppercase tracking-wider text-[#82918a]">
+              {/* <div className="text-[9px] uppercase tracking-wider text-[#82918a]">
                 Your fitness journey
-              </div>
+              </div> */}
             </div>
 
           </Link>
@@ -453,7 +455,7 @@ hover:text-cyan-400
 
         {/* User */}
 
-        <div className="border-b border-[#e4ebe7] p-5">
+        {/* <div className="border-b border-[#e4ebe7] p-5">
 
           <div className="flex items-center gap-3">
 
@@ -475,7 +477,7 @@ hover:text-cyan-400
 
           </div>
 
-        </div>
+        </div> */}
 
         {/* Navigation */}
 
