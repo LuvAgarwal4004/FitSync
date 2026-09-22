@@ -1,14 +1,22 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
-  images:{
-        domains:["lh3.googleusercontent.com","res.cloudinary.com"],
-          remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "api.dicebear.com",
-      },
-    ],
-  },
+    images: {
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "lh3.googleusercontent.com",
+            },
+            {
+                protocol: "https",
+                hostname: "res.cloudinary.com",
+            },
+            {
+                protocol: "https",
+                hostname: "api.dicebear.com",
+            },
+        ],
+    },
 };
 
 export default nextConfig;
