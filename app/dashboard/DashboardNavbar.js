@@ -129,7 +129,7 @@ export default function DashboardNavbar({ user }) {
               href="/dashboard"
               className="flex items-center gap-3"
             >
-              <img src="/logo.png" alt="Your Company" className="
+              <img src="/icon.png" alt="Your Company" className="
 h-16
 md:h-20
 w-auto
