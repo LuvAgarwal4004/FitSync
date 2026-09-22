@@ -129,8 +129,10 @@ export default async function Home() {
           NAVBAR
       ========================================= */}
 
-      <header className="fixed left-0 right-0 top-0 z-50 border-b border-[#dce8e1]/70 bg-[#f7faf8]/85 backdrop-blur-xl">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8">
+      <header className="fixed left-0 right-0 top-0 
+      z-50 border-b border-[#dce8e1]/70 bg-[#f7faf8]/85 backdrop-blur-xl">
+        <div className="mx-auto flex h-20 max-w-7xl
+         items-center justify-between px-5 sm:px-8">
 
           {/* Logo */}
 
@@ -138,7 +140,9 @@ export default async function Home() {
             href="/"
             className="group flex items-center gap-3"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#173d30] text-lg font-bold text-white shadow-lg shadow-[#173d30]/15 transition-transform duration-300 group-hover:scale-105">
+            <div className="flex h-10 w-10 items-center justify-center 
+            rounded-xl bg-[#173d30] text-lg font-bold text-white shadow-lg 
+            shadow-[#173d30]/15 transition-transform duration-300 group-hover:scale-105">
               F
             </div>
 
@@ -147,9 +151,9 @@ export default async function Home() {
                 FitSync
               </div>
 
-              <div className="hidden text-[10px] font-medium uppercase tracking-[0.18em] text-[#779087] sm:block">
+              {/* <div className="hidden text-[10px] font-medium uppercase tracking-[0.18em] text-[#779087] sm:block">
                 Train · Fuel · Track · Repeat
-              </div>
+              </div> */}
             </div>
           </Link>
 

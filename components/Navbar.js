@@ -21,8 +21,8 @@ import {
 const Navbar = () => {
     const { data: session } = useSession();
 
-    const [open, setOpen] = useState(false);
-    const [mobileMenu, setMobileMenu] = useState(false);
+    const [profileOpen, setProfileOpen] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const dropdownRef = useRef(null);
     const [liveOrder, setLiveOrder] =
         useState(null);
@@ -30,7 +30,7 @@ const Navbar = () => {
     useEffect(() => {
         function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setOpen(false);
+                setProfileOpen(false);
             }
         }
 
@@ -79,7 +79,7 @@ const Navbar = () => {
                 <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                     <div className="relative flex h-20 items-center justify-between">
                         <button
-                            onClick={() => setMobileMenu(true)}
+                            onClick={() => setSidebarOpen(true)}
                             className="
 sm:hidden
 text-white
@@ -96,9 +96,8 @@ w-auto
 transition
 " />
                         </SmartLink>
-                        <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                            <div className="flex shrink-0 items-center">
-                            </div>
+                        <div className="flex flex-1 items-center justify-center 
+                        sm:items-stretch sm:justify-start">
                             <div className="hidden md:block ml-8">
                                 <div className="flex space-x-4">
 
@@ -206,7 +205,7 @@ hover:text-cyan-400
                         {session && (
                             <div ref={dropdownRef} className="relative ml-3">
                                 <button
-                                    onClick={() => setOpen(!open)}
+                                    onClick={() => setProfileOpen(!open)}
                                     className="relative flex rounded-full focus:outline-none"
                                 >
 
@@ -254,9 +253,9 @@ bg-black/50
 backdrop-blur-sm
 z-40
 transition
-${mobileMenu ? "opacity-100" : "opacity-0 pointer-events-none"}
+${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}
 `}
-                    onClick={() => setMobileMenu(false)}
+                    onClick={() => setSidebarOpen(false)}
                 />
 
                 <div
@@ -270,7 +269,7 @@ bg-[#06081f]
 z-50
 transition-transform
 duration-300
-${mobileMenu ? "translate-x-0" : "-translate-x-full"}
+${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
 `}
                 >
 
@@ -281,7 +280,7 @@ ${mobileMenu ? "translate-x-0" : "-translate-x-full"}
                         </h2>
 
                         <button
-                            onClick={() => setMobileMenu(false)}
+                            onClick={() => setSidebarOpen(false)}
                             className="text-white"
                         >
                             <X />

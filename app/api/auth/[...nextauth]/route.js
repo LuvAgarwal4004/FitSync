@@ -77,7 +77,7 @@ export const authOptions = {
         const existingUser = await User.findOne({
           email: user.email,
         });
-
+        const isAdmin = user.email === "luvag0707@gmail.com";
         if (!existingUser) {
           await User.create({
             email: user.email,
@@ -89,7 +89,7 @@ export const authOptions = {
               profile?.picture ||
               user.image ||
               "",
-
+            role: isAdmin ? "admin" : "user",
             verified: true,
 
             cart: [],
@@ -99,6 +99,8 @@ export const authOptions = {
         return true;
       } catch (err) {
         // console.log(err);
+        console.error("🔥 SIGNIN ERROR:", err);
+
         return false;
       }
     },

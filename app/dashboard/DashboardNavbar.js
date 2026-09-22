@@ -1,6 +1,11 @@
 "use client";
-
+import React from 'react'
 import { useState } from "react";
+import { useSession, signOut } from "next-auth/react"
+import Image from "next/image";
+import { useEffect, useRef } from "react";
+import { useCart } from "@/context/CartContext";
+import SmartLink from './SmartLink';
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
@@ -20,13 +25,62 @@ import {
 } from "lucide-react";
 
 export default function DashboardNavbar({ user }) {
+  const { data: session } = useSession();
+
   const [profileOpen, setProfileOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
 
   const firstLetter =
     user?.name?.[0]?.toUpperCase() || "F";
+  const dropdownRef = useRef(null);
+  const [liveOrder, setLiveOrder] =
+    useState(null);
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setProfileOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  const { cart, animateCart, setCart } = useCart();
+
+  useEffect(() => {
+    if (session) {
+      fetch("/api/cart/get", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        // body: JSON.stringify({
+        //     email: session.user.email
+        // })
+      })
+        .then(res => res.json())
+        .then(data => {
+          setCart(data.cart); // IMPORTANT
+        });
+    }
+  }, [session]);
+  useEffect(() => {
+
+    if (session) {
+
+      fetch("/api/order/live")
+        .then(res => res.json())
+        .then(data => {
+          setLiveOrder(data.order);
+        });
+
+    }
+
+  }, [session]);
   const handleLogout = async () => {
     try {
       setLoggingOut(true);
@@ -73,18 +127,21 @@ export default function DashboardNavbar({ user }) {
               href="/dashboard"
               className="flex items-center gap-3"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#173d30] font-bold text-white shadow-lg">
-                F
-              </div>
+              <img src="/logo.png" alt="Your Company" className="
+h-16
+md:h-20
+w-auto
+transition
+" />
 
               <div>
                 <div className="text-lg font-bold text-[#173d30]">
                   FitSync
                 </div>
 
-                <div className="hidden text-[10px] font-medium uppercase tracking-[0.18em] text-[#779087] sm:block">
+                {/* <div className="hidden text-[10px] font-medium uppercase tracking-[0.18em] text-[#779087] sm:block">
                   Train · Fuel · Track · Repeat
-                </div>
+                </div> */}
               </div>
             </Link>
 
@@ -94,69 +151,69 @@ export default function DashboardNavbar({ user }) {
               DESKTOP USER AREA
           ================================================= */}
 
-          <div className="relative">
+          {/* <div className="relative"> */}
 
-            <button
-              type="button"
-              onClick={() =>
-                setProfileOpen((previous) => !previous)
-              }
-              className="flex items-center gap-3 rounded-2xl px-2 py-1.5 transition hover:bg-[#eaf2ed]"
-            >
+          <button
+            type="button"
+            onClick={() =>
+              setProfileOpen((previous) => !previous)
+            }
+            className="flex items-center gap-3 rounded-2xl px-2 py-1.5 transition hover:bg-[#eaf2ed]"
+          >
 
-              <div className="hidden text-right sm:block">
+            <div className="hidden text-right sm:block">
+
+              <p className="text-sm font-bold text-[#24483a]">
+                {user?.name || "FitSync User"}
+              </p>
+
+              <p className="text-xs text-[#82918a]">
+                Your fitness journey
+              </p>
+
+            </div>
+
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#dceee3] font-bold text-[#397054]">
+              {firstLetter}
+            </div>
+
+            <ChevronDown
+              size={16}
+              className={`hidden text-[#71817a] transition-transform sm:block ${profileOpen ? "rotate-180" : ""
+                }`}
+            />
+
+          </button>
+
+          {/* =================================================
+                PROFILE DROPDOWN
+            ================================================= */}
+
+          {profileOpen && (
+            <div className="absolute right-0 top-14 z-50 w-64 overflow-hidden rounded-2xl border border-[#dfe9e3] bg-white p-2 shadow-xl">
+
+              <div className="border-b border-[#edf1ee] px-4 py-3">
 
                 <p className="text-sm font-bold text-[#24483a]">
                   {user?.name || "FitSync User"}
                 </p>
 
-                <p className="text-xs text-[#82918a]">
-                  Your fitness journey
+                <p className="mt-1 truncate text-xs text-[#82918a]">
+                  {user?.email || ""}
                 </p>
 
               </div>
 
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#dceee3] font-bold text-[#397054]">
-                {firstLetter}
-              </div>
+              <Link
+                href="/dashboard"
+                onClick={() => setProfileOpen(false)}
+                className="mt-1 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-[#53665e] transition hover:bg-[#edf6f0]"
+              >
+                <LayoutDashboard size={17} />
+                Dashboard
+              </Link>
 
-              <ChevronDown
-                size={16}
-                className={`hidden text-[#71817a] transition-transform sm:block ${profileOpen ? "rotate-180" : ""
-                  }`}
-              />
-
-            </button>
-
-            {/* =================================================
-                PROFILE DROPDOWN
-            ================================================= */}
-
-            {profileOpen && (
-              <div className="absolute right-0 top-14 z-50 w-64 overflow-hidden rounded-2xl border border-[#dfe9e3] bg-white p-2 shadow-xl">
-
-                <div className="border-b border-[#edf1ee] px-4 py-3">
-
-                  <p className="text-sm font-bold text-[#24483a]">
-                    {user?.name || "FitSync User"}
-                  </p>
-
-                  <p className="mt-1 truncate text-xs text-[#82918a]">
-                    {user?.email || ""}
-                  </p>
-
-                </div>
-
-                <Link
-                  href="/dashboard"
-                  onClick={() => setProfileOpen(false)}
-                  className="mt-1 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-[#53665e] transition hover:bg-[#edf6f0]"
-                >
-                  <LayoutDashboard size={17} />
-                  Dashboard
-                </Link>
-
-                {/* <Link
+              {/* <Link
                   href="/dashboard/profile"
                   onClick={() => setProfileOpen(false)}
                   className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-[#53665e] transition hover:bg-[#edf6f0]"
@@ -165,23 +222,167 @@ export default function DashboardNavbar({ user }) {
                   My Profile
                 </Link> */}
 
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  disabled={loggingOut}
-                  className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-50"
-                >
-                  <LogOut size={17} />
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-50"
+              >
+                <LogOut size={17} />
 
-                  {loggingOut
-                    ? "Logging out..."
-                    : "Logout"}
-                </button>
+                {loggingOut
+                  ? "Logging out..."
+                  : "Logout"}
+              </button>
 
+            </div>
+          )}
+
+          {/* </div> */}
+          <div className="flex flex-1 items-center justify-center 
+                        sm:items-stretch sm:justify-start">
+            <div className="hidden md:block ml-8">
+              <div className="flex space-x-4">
+
+                <SmartLink href="/dashboard"> <span aria-current="page"
+                  className="
+rounded-xl
+px-4
+py-2
+text-sm
+font-medium
+text-gray-300
+transition
+duration-300
+hover:bg-cyan-500/10
+hover:text-cyan-400
+">Dashbaord</span></SmartLink>
+                {session && (<>
+                  {liveOrder?.length > 0 && (
+                    <SmartLink href="/track-order">
+                      <span className="
+rounded-md
+px-3
+py-2
+text-sm
+font-medium
+text-gray-300
+hover:bg-white/5
+hover:text-white
+">
+                        Track Order
+                      </span>
+                    </SmartLink>
+                  )}
+                  <SmartLink href="/my-orders">
+                    <span className="
+rounded-xl
+px-4
+py-2
+text-sm
+font-medium
+text-gray-300
+transition
+duration-300
+hover:bg-cyan-500/10
+hover:text-cyan-400
+">My Order</span></SmartLink>
+                </>)}
+                <SmartLink href="/contact"><span
+                  className="
+rounded-xl
+px-4
+py-2
+text-sm
+font-medium
+text-gray-300
+transition
+duration-300
+hover:bg-cyan-500/10
+hover:text-cyan-400
+">Contact</span></SmartLink>
+                {/* <SmartLink href="#"><span className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">More</span></SmartLink> */}
+
+                {session?.user?.role === "admin" && (
+                  <SmartLink href="/admin">
+                    <span
+                      className="
+rounded-xl
+px-4
+py-2
+text-sm
+font-medium
+text-gray-300
+transition
+duration-300
+hover:bg-cyan-500/10
+hover:text-cyan-400
+">
+                      Admin
+                    </span>
+                  </SmartLink>
+                )}
               </div>
-            )}
-
+            </div>
           </div>
+          {session && (
+            <SmartLink href={"/Cart"}>
+              <button id="cart-icon" className="relative">
+                <div
+                  className={`transition-transform duration-300 ${animateCart ? "scale-220 -translate-y-1" : "scale-160"
+                    }`}
+                >
+                  🛒
+                </div>
+
+                {/* badge */}
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 rounded-full">
+                  {cart.length}
+                </span>
+              </button>
+            </SmartLink>
+          )}
+
+
+
+          {session && (
+            <div ref={dropdownRef} className="relative ml-3">
+              <button
+                onClick={() => setProfileOpen(!open)}
+                className="relative flex rounded-full focus:outline-none"
+              >
+
+                <Image
+                  src={session?.user?.image || `https://api.dicebear.com/7.x/initials/png?seed=${encodeURIComponent(session?.user?.name || "User")}`}
+                  alt="profile"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              </button>
+
+              {open && (
+                <div className="absolute z-10 right-0 mt-2 w-40 rounded-md bg-white py-1 shadow-lg">
+                  {/* <SmartLink href="#"><span className="block px-4 py-2 text-sm text-gray-700
+                                     hover:bg-gray-100">
+                                        Your profile
+                                    </span>
+                                    </SmartLink> */}
+
+                  <button
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Sign out
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {!session && <SmartLink href={"/login"}>
+            <button type="button" className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl rounded-lg focus:ring-4 focus:outline-none font-medium rounded-base text-sm px-4 py-2.5 text-center leading-5">Login</button>
+          </SmartLink>}
 
         </div>
 
@@ -203,15 +404,17 @@ export default function DashboardNavbar({ user }) {
       ===================================================== */}
 
       <aside
-        className={`fixed left-0 top-0 z-[110] flex h-full w-[285px] flex-col bg-white shadow-2xl transition-transform duration-300 lg:hidden ${sidebarOpen
-          ? "translate-x-0"
-          : "-translate-x-full"
+        className={`fixed left-0 top-0 z-[110] flex h-full w-[285px]
+           flex-col bg-white shadow-2xl transition-transform duration-300 lg:hidden ${sidebarOpen
+            ? "translate-x-0"
+            : "-translate-x-full"
           }`}
       >
 
         {/* Sidebar header */}
 
-        <div className="flex h-20 items-center justify-between border-b border-[#e4ebe7] px-5">
+        <div className="flex h-20 items-center justify-between 
+        border-b border-[#e4ebe7] px-5">
 
           <Link
             href="/dashboard"
@@ -333,7 +536,49 @@ export default function DashboardNavbar({ user }) {
             label="My Profile"
             onClick={() => setSidebarOpen(false)}
           /> */}
+          {session && liveOrder?.length > 0 && (
 
+            <SmartLink href="/track-order" className="p-4 text-gray-300 hover:bg-white/10">
+
+              <Truck className="inline mr-3" />
+
+              Track Order
+
+            </SmartLink>
+
+          )}
+
+          {session && (
+
+            <SmartLink href="/my-orders" className="p-4 text-gray-300 hover:bg-white/10">
+
+              <Package className="inline mr-3" />
+
+              My Orders
+
+            </SmartLink>
+
+          )}
+
+          <SmartLink href="/contact" className="p-4 text-gray-300 hover:bg-white/10">
+
+            <Phone className="inline mr-3" />
+
+            Contact
+
+          </SmartLink>
+
+          {session?.user?.role === "admin" && (
+
+            <SmartLink href="/admin" className="p-4 text-gray-300 hover:bg-white/10">
+
+              <Shield className="inline mr-3" />
+
+              Admin
+
+            </SmartLink>
+
+          )}
         </nav>
 
         {/* Logout */}
@@ -344,7 +589,8 @@ export default function DashboardNavbar({ user }) {
             type="button"
             onClick={handleLogout}
             disabled={loggingOut}
-            className="flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-bold text-red-600 transition hover:bg-red-50 disabled:opacity-50"
+            className="flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 
+            text-sm font-bold text-red-600 transition hover:bg-red-50 disabled:opacity-50"
           >
 
             <LogOut size={19} />
