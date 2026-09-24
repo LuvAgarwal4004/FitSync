@@ -61,7 +61,7 @@ export default function LoginPage() {
       <div className="pointer-events-none absolute -bottom-40 -left-40 h-[500px] w-[500px] rounded-full bg-[#e5eee8] blur-3xl" />
 
       {/* Navbar */}
-      <header className="relative z-10 border-b border-[#dce8e1]/70 bg-white/70 backdrop-blur-xl">
+      {/* <header className="relative z-10 border-b border-[#dce8e1]/70 bg-white/70 backdrop-blur-xl">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8">
 
           <Link href="/" className="flex items-center gap-3">
@@ -88,7 +88,7 @@ export default function LoginPage() {
           </Link>
 
         </div>
-      </header>
+      </header> */}
 
       {/* Content */}
       <div className="relative flex min-h-[calc(100vh-80px)] items-center justify-center px-5 py-12 sm:px-8">
