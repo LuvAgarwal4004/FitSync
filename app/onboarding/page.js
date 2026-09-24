@@ -297,7 +297,7 @@ useEffect(() => {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#f7faf8]">
         <div className="text-sm font-semibold text-[#5d9c7b]">
-          Loading FitSync...
+          Loading NutriFit...
         </div>
       </main>
     );
@@ -320,7 +320,7 @@ useEffect(() => {
 
           <div>
             <div className="text-xl font-bold text-[#173d30]">
-              FitSync
+              NutriFit
             </div>
 
             <p className="text-xs text-[#82918a]">
@@ -546,7 +546,7 @@ useEffect(() => {
               <StepContainer
                 eyebrow="Your training"
                 title="How do you like to train?"
-                description="This helps FitSync create realistic routines around your lifestyle."
+                description="This helps NutriFit create realistic routines around your lifestyle."
               >
 
                 <label className="mb-3 block text-sm font-bold text-[#315047]">
@@ -710,7 +710,7 @@ useEffect(() => {
               <StepContainer
                 eyebrow="Fuel your body"
                 title="Tell us about your nutrition."
-                description="This information helps FitSync personalize general nutrition guidance."
+                description="This information helps NutriFit personalize general nutrition guidance."
               >
 
                 <label className="mb-3 block text-sm font-bold text-[#315047]">
@@ -851,7 +851,7 @@ useEffect(() => {
         </div>
 
         <p className="mt-5 text-center text-xs leading-5 text-[#8a9992]">
-          Your information is stored in your FitSync account and is used to
+          Your information is stored in your NutriFit account and is used to
           personalize your experience.
         </p>
 

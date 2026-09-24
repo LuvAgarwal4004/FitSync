@@ -141,12 +141,12 @@ export default function DashboardNavbar({ user }) {
 
             <Link href="/dashboard" className="flex items-center gap-2.5">
               <img
-                src="/icon.png"
-                alt="FitSync logo"
+                src="/icon.jpeg"
+                alt="NutriFit logo"
                 className="h-10 w-auto md:h-11"
               />
               <span className="text-lg font-bold tracking-tight text-[#173d30]">
-                FitSync
+                NutriFit
               </span>
             </Link>
           </div>
@@ -250,7 +250,7 @@ export default function DashboardNavbar({ user }) {
                   >
                     <div className="border-b border-[#edf1ee] px-3 py-3">
                       <p className="truncate text-sm font-bold text-[#24483a]">
-                        {currentUser?.name || "FitSync User"}
+                        {currentUser?.name || "NutriFit User"}
                       </p>
                       <p className="mt-0.5 truncate text-xs text-[#82918a]">
                         {currentUser?.email || ""}
@@ -331,7 +331,7 @@ export default function DashboardNavbar({ user }) {
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#173d30] font-bold text-white">
               F
             </div>
-            <span className="text-lg font-bold text-[#173d30]">FitSync</span>
+            <span className="text-lg font-bold text-[#173d30]">NutriFit</span>
           </Link>
 
           <button

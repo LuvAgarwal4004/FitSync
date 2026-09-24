@@ -185,7 +185,7 @@ export default function SignupPage() {
 
             <div>
               <div className="text-lg font-bold text-[#173d30]">
-                FitSync
+                NutriFit
               </div>
 
               <div className="hidden text-[10px] font-medium uppercase tracking-[0.18em] text-[#779087] sm:block">
@@ -228,7 +228,7 @@ export default function SignupPage() {
             </h1>
 
             <p className="mt-6 leading-8 text-[#c3d7cc]">
-              FitSync brings training, nutrition, progress tracking,
+              NutriFit brings training, nutrition, progress tracking,
               challenges and AI-powered guidance into one ecosystem.
             </p>
 

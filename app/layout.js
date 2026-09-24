@@ -8,6 +8,7 @@ import RouteLoader from "@/components/RouteLoader";
 import { Toaster } from "react-hot-toast";
 // import { CheckoutProvider } from "@/context/CheckoutContext";
 import NotificationProvider from "@/components/NotificationProvider";
+import DashboardNavbar from "./dashboard/DashboardNavbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +38,7 @@ export default function RootLayout({ children }) {
               {/* <CheckoutProvider> */}
 
 
-              {/* <Navbar /> */}
+              <DashboardNavbar />
               <div className="min-h-screen">
 
                 {children}

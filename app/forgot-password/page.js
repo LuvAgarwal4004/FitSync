@@ -101,7 +101,7 @@ export default function ForgotPasswordPage() {
 
             <div>
               <div className="text-lg font-bold tracking-tight text-[#173d30]">
-                FitSync
+                NutriFit
               </div>
 
               <div className="hidden text-[10px] font-medium uppercase tracking-[0.18em] text-[#779087] sm:block">
@@ -143,7 +143,7 @@ export default function ForgotPasswordPage() {
 
             <p className="mt-6 leading-8 text-[#c3d7cc]">
               We use email verification to make sure only you can reset
-              your FitSync account password.
+              your NutriFit account password.
             </p>
 
             <div className="mt-10 space-y-5">

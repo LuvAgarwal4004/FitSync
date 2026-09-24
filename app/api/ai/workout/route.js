@@ -228,7 +228,7 @@ export async function POST() {
     // ==========================================================
 
     const prompt = `
-You are FitSync AI, a personalized fitness planning engine.
+You are NutriFit AI, a personalized fitness planning engine.
 
 Create a realistic weekly workout plan for this user.
 

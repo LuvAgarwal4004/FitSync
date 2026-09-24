@@ -39,7 +39,7 @@ messaging.onBackgroundMessage((payload) => {
         payload.notification.title,
         {
             body: payload.notification.body,
-            icon: "/logo1.jpg",
+            icon: "/icon.jpeg",
 
             data: {
                 url: payload.data.url

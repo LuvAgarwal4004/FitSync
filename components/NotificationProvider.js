@@ -62,7 +62,7 @@ export default function NotificationProvider() {
     //             //     payload.notification.title,
     //             //     {
     //             //         body: payload.notification.body,
-    //             //         icon: "/logo1.jpg",
+    //             //         icon: "/icon.jpeg",
     //             //     }
     //             // );
 
@@ -87,7 +87,7 @@ export default function NotificationProvider() {
                 const registration = await navigator.serviceWorker.ready;
                 registration.showNotification(payload.notification?.title, {
                     body: payload.notification?.body,
-                    icon: "/logo1.jpg",
+                    icon: "/icon.jpeg",
                     data: { url: payload.data?.url || "/rent-requests" },
                 });
             }

@@ -223,7 +223,7 @@ export async function POST(request) {
 
 
       const prompt = `
-You are FitSync AI.
+You are NutriFit AI.
 
 The user has explicitly approved adapting their workout plan.
 
@@ -582,7 +582,7 @@ ${JSON.stringify(insights)}
 
 
       const prompt = `
-You are FitSync AI.
+You are NutriFit AI.
 
 The user has explicitly approved adapting their nutrition plan.
 

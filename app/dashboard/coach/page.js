@@ -63,14 +63,14 @@ export default function CoachPage() {
         }
 
         window.addEventListener(
-            "fitsync-ai-suggestion",
+            "NutriFit-ai-suggestion",
             handleSuggestion
         );
 
         return () => {
 
             window.removeEventListener(
-                "fitsync-ai-suggestion",
+                "NutriFit-ai-suggestion",
                 handleSuggestion
             );
 
@@ -280,7 +280,7 @@ export default function CoachPage() {
                     <div>
 
                         <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#5d9c7b]">
-                            FitSync AI
+                            NutriFit AI
                         </p>
 
                         <h1 className="font-bold text-[#173d30]">
@@ -353,7 +353,7 @@ export default function CoachPage() {
                                             className="animate-spin"
                                         />
 
-                                        FitSync is thinking...
+                                        NutriFit is thinking...
 
                                     </div>
 
@@ -434,7 +434,7 @@ export default function CoachPage() {
 
 
                         <p className="mt-3 text-center text-[11px] leading-5 text-[#8a9992]">
-                            FitSync AI provides general fitness guidance.
+                            NutriFit AI provides general fitness guidance.
                             It does not diagnose or treat medical conditions.
                         </p>
 
@@ -521,7 +521,7 @@ function Suggestion({
 
                 const event =
                     new CustomEvent(
-                        "fitsync-ai-suggestion",
+                        "NutriFit-ai-suggestion",
                         {
                             detail: text,
                         }
@@ -612,7 +612,7 @@ function ChatBubble({
 
 
                             <p className="mt-2 text-xs leading-5 text-[#71817a]">
-                                FitSync can regenerate the relevant plan
+                                NutriFit can regenerate the relevant plan
                                 using this new information.
                             </p>
 

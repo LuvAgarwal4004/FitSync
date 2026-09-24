@@ -148,7 +148,7 @@ export default async function Home() {
 
             <div>
               <div className="text-lg font-bold tracking-tight text-[#173d30]">
-                FitSync
+                NutriFit
               </div>
 
               {/* <div className="hidden text-[10px] font-medium uppercase tracking-[0.18em] text-[#779087] sm:block">
@@ -252,7 +252,7 @@ export default async function Home() {
             </h1>
 
             <p className="mt-7 max-w-xl text-base leading-8 text-[#63766e] sm:text-lg">
-              FitSync brings personalized AI fitness guidance, nutrition
+              NutriFit brings personalized AI fitness guidance, nutrition
               support, fitness shopping, progress tracking and challenges
               together in one place.
             </p>
@@ -274,7 +274,7 @@ export default async function Home() {
                 href="#features"
                 className="inline-flex items-center justify-center rounded-full border border-[#cfddd6] bg-white/70 px-7 py-4 text-sm font-bold text-[#315047] backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:bg-white"
               >
-                Explore FitSync
+                Explore NutriFit
               </a>
 
             </div>
@@ -434,7 +434,7 @@ export default async function Home() {
                   <div>
 
                     <p className="text-xs font-semibold uppercase tracking-wider text-[#a8cbb7]">
-                      FitSync AI
+                      NutriFit AI
                     </p>
 
                     <p className="mt-1 text-sm leading-6 text-[#e5f0ea]">
@@ -510,7 +510,7 @@ export default async function Home() {
             </h2>
 
             <p className="mt-5 text-base leading-7 text-[#687a72] sm:text-lg">
-              FitSync connects the different parts of your fitness journey
+              NutriFit connects the different parts of your fitness journey
               instead of making you jump between different platforms.
             </p>
 
@@ -616,7 +616,7 @@ export default async function Home() {
             </h2>
 
             <p className="mt-6 max-w-xl leading-8 text-[#61746b]">
-              Tell FitSync about your goal, experience, schedule, equipment
+              Tell NutriFit about your goal, experience, schedule, equipment
               and preferences. Your AI Coach can then generate a personalized
               routine designed around the information you provide.
             </p>
@@ -809,7 +809,7 @@ export default async function Home() {
                 <div className="mt-3 rounded-2xl bg-[#173d30] p-5 text-white">
 
                   <p className="text-xs uppercase tracking-wider text-[#a8cbb7]">
-                    Recommended from FitSync Shop
+                    Recommended from NutriFit Shop
                   </p>
 
                   <div className="mt-4 flex items-center justify-between">
@@ -858,7 +858,7 @@ export default async function Home() {
               </h2>
 
               <p className="mt-6 leading-8 text-[#687a72]">
-                Tell FitSync about your workout, fitness objective and dietary
+                Tell NutriFit about your workout, fitness objective and dietary
                 preferences. The platform can provide general nutrition
                 suggestions and surface relevant products.
               </p>
@@ -1019,7 +1019,7 @@ export default async function Home() {
               [
                 "01",
                 "Discover",
-                "Find FitSync and start your fitness journey.",
+                "Find NutriFit and start your fitness journey.",
               ],
               [
                 "02",
@@ -1100,7 +1100,7 @@ export default async function Home() {
               </h2>
 
               <p className="mx-auto mt-5 max-w-xl leading-7 text-[#61756b]">
-                Create your FitSync account and start building a fitness
+                Create your NutriFit account and start building a fitness
                 journey designed around you.
               </p>
 
@@ -1131,7 +1131,7 @@ export default async function Home() {
           <div>
 
             <div className="text-lg font-bold text-[#173d30]">
-              FitSync
+              NutriFit
             </div>
 
             <p className="mt-1 text-sm text-[#82918a]">
@@ -1180,7 +1180,7 @@ export default async function Home() {
           </div>
 
           <p className="text-xs text-[#8b9993]">
-            © {new Date().getFullYear()} FitSync
+            © {new Date().getFullYear()} NutriFit
           </p>
 
         </div>

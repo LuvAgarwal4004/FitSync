@@ -64,8 +64,8 @@ export default function Navbar() {
 <SmartLink href="/" className="flex items-center">
   <div className="flex items-center rounded-xl bg-white px-2 py-1 shadow-md">
     <img
-      src="/logo1.jpg"
-      alt="FitSync Stationary"
+      src="/icon.jpeg"
+      alt="NutriFit Stationary"
       className="h-18 w-auto object-contain"
     />
   </div>

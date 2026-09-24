@@ -669,7 +669,7 @@ export async function POST(request) {
         // ========================================================
 
         const prompt = `
-You are FitSync AI Fitness Coach.
+You are NutriFit AI Fitness Coach.
 
 You are the user's personalized fitness assistant.
 

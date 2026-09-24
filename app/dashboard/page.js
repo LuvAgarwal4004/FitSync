@@ -239,8 +239,8 @@ export default async function DashboardPage() {
             href="/dashboard/coach"
             icon={<Sparkles size={24} />}
             title="AI Coach Chat"
-            description="Talk to your FitSync AI coach about workouts, nutrition, recovery and your fitness journey."
-            action="Chat with FitSync AI"
+            description="Talk to your NutriFit AI coach about workouts, nutrition, recovery and your fitness journey."
+            action="Chat with NutriFit AI"
           />
 
 
@@ -292,7 +292,7 @@ export default async function DashboardPage() {
               </div>
 
               <p className="mt-7 text-sm font-bold uppercase tracking-[0.18em] text-[#a8cbb7]">
-                FitSync AI
+                NutriFit AI
               </p>
 
               <h2 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl">
@@ -302,7 +302,7 @@ export default async function DashboardPage() {
               </h2>
 
               <p className="mt-5 max-w-xl leading-7 text-[#c1d6ca]">
-                Tell FitSync what you're trying to achieve and we'll use
+                Tell NutriFit what you're trying to achieve and we'll use
                 the information you provide to help create a more
                 personalized fitness experience.
               </p>

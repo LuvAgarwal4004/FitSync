@@ -395,7 +395,7 @@ export async function POST() {
     // ==========================================================
 
     const prompt = `
-You are FitSync AI's adaptive fitness analysis engine.
+You are NutriFit AI's adaptive fitness analysis engine.
 
 Your job is NOT to blindly change the user's fitness plan.
 

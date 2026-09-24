@@ -71,7 +71,7 @@ export default function LoginPage() {
 
             <div>
               <div className="text-lg font-bold tracking-tight text-[#173d30]">
-                FitSync
+                NutriFit
               </div>
 
               <div className="hidden text-[10px] font-medium uppercase tracking-[0.18em] text-[#779087] sm:block">
@@ -150,7 +150,7 @@ export default function LoginPage() {
               </h2>
 
               <p className="mt-2 text-[#71817a]">
-                Log in to continue your FitSync journey.
+                Log in to continue your NutriFit journey.
               </p>
             </div>
 

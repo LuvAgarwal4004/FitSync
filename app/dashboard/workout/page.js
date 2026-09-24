@@ -183,7 +183,7 @@ export default function WorkoutPage() {
 
           <p className="mt-2 text-sm text-[#7b8982]">
 
-            FitSync AI is using your fitness profile.
+            NutriFit AI is using your fitness profile.
 
           </p>
 
@@ -258,7 +258,7 @@ export default function WorkoutPage() {
                 <div>
 
                   <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#5d9c7b]">
-                    FitSync AI
+                    NutriFit AI
                   </p>
 
                   <h1 className="mt-1 text-3xl font-bold text-[#173d30]">

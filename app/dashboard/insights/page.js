@@ -130,7 +130,7 @@ export default function InsightsPage() {
 
     const confirmed =
       window.confirm(
-        `Are you sure you want FitSync AI to adapt your ${type} plan based on your recent activity?`
+        `Are you sure you want NutriFit AI to adapt your ${type} plan based on your recent activity?`
       );
 
 
@@ -255,7 +255,7 @@ export default function InsightsPage() {
               opacity: 0.7,
             }}
           >
-            FitSync AI analyzes your recent
+            NutriFit AI analyzes your recent
             workout and nutrition behavior.
           </p>
 
@@ -332,7 +332,7 @@ export default function InsightsPage() {
             }}
           >
             Complete some workouts and meals,
-            then ask FitSync AI to analyze
+            then ask NutriFit AI to analyze
             your progress.
           </p>
 

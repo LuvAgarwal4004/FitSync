@@ -204,7 +204,7 @@ export default function NutritionPage() {
 
 
               <p className="mt-5 max-w-2xl leading-7 text-[#c1d6ca]">
-                FitSync will use the information you provided
+                NutriFit will use the information you provided
                 during onboarding to create a nutrition plan
                 around your goal, diet, activity level and
                 meal preferences.
@@ -243,7 +243,7 @@ export default function NutritionPage() {
 
 
           <p className="mt-5 text-center text-xs leading-5 text-[#8a9992]">
-            FitSync provides general fitness and nutrition
+            NutriFit provides general fitness and nutrition
             guidance and is not a substitute for professional
             medical advice.
           </p>
@@ -540,7 +540,7 @@ export default function NutritionPage() {
           <section className="mt-10">
 
             <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#5d9c7b]">
-              FitSync guidance
+              NutriFit guidance
             </p>
 
             <h2 className="mt-2 text-2xl font-bold text-[#173d30]">
@@ -583,7 +583,7 @@ export default function NutritionPage() {
 
 
         <p className="mt-10 text-center text-xs leading-5 text-[#8a9992]">
-          FitSync nutrition guidance is for general fitness
+          NutriFit nutrition guidance is for general fitness
           purposes and does not replace professional medical
           or dietary advice.
         </p>
