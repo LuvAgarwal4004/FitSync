@@ -20,7 +20,7 @@ export default function RouteLoader({ children }) {
 
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1500); // adjust this (1000–2000ms feels premium)
+    }, 500); // adjust this (1000–2000ms feels premium)
 
     return () => clearTimeout(timer);
   }, [pathname]);
