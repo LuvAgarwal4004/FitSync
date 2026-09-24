@@ -9,6 +9,7 @@ import { Toaster } from "react-hot-toast";
 // import { CheckoutProvider } from "@/context/CheckoutContext";
 import NotificationProvider from "@/components/NotificationProvider";
 import DashboardNavbar from "./dashboard/DashboardNavbar";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,7 +25,8 @@ export const metadata = {
   title: "NutriFit",
   description: "Get your Fitness up!",
 };
-
+const session =
+    await getServerSession(authOptions);
 export default function RootLayout({ children }) {
 
 
@@ -38,7 +40,7 @@ export default function RootLayout({ children }) {
               {/* <CheckoutProvider> */}
 
 
-              <DashboardNavbar />
+              <DashboardNavbar user={session.user}/>
               <div className="min-h-screen">
 
                 {children}

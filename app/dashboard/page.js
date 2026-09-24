@@ -118,7 +118,7 @@ export default async function DashboardPage() {
           NAVBAR
       ===================================================== */}
 
-      <DashboardNavbar user={user} />
+      {/* <DashboardNavbar user={user} /> */}
 
 
       {/* =====================================================
