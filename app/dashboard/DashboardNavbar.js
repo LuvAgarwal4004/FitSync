@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-
 import { useCart } from "@/context/CartContext";
 import SmartLink from "@/components/SmartLink";
 
@@ -12,23 +11,28 @@ import {
   Menu,
   X,
   LogOut,
+  LogIn,
   Activity,
   Sparkles,
-  MessageCircle,
   LayoutDashboard,
   Dumbbell,
   Utensils,
   Phone,
   Package,
-  Store,
   Truck,
-  ShieldCheck,
+  Shield,
+  ShoppingBag,
   ShoppingCart,
 } from "lucide-react";
 
-export default function DashboardNavbar() {
+function isActive(pathname, href) {
+  if (href === "/dashboard") return pathname === "/dashboard";
+  return pathname === href || pathname.startsWith(href + "/");
+}
+
+export default function DashboardNavbar({ user }) {
   const { data: session, status } = useSession();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const { cart, animateCart, setCart } = useCart();
 
   const [profileOpen, setProfileOpen] = useState(false);
@@ -38,69 +42,73 @@ export default function DashboardNavbar() {
 
   const dropdownRef = useRef(null);
 
-  const authed = status === "authenticated";
-  const isAdmin = session?.user?.role === "admin";
-  const hasLiveOrder = liveOrder?.length > 0;
+  const isLoggedIn = status === "authenticated";
+  const isAdminUser = session?.user?.role === "admin";
+  const currentUser = session?.user || user || {};
   const cartCount = Array.isArray(cart) ? cart.length : 0;
+  const hasLiveOrder = Array.isArray(liveOrder)
+    ? liveOrder.length > 0
+    : Boolean(liveOrder);
 
   const avatarSrc =
-    session?.user?.image ||
+    currentUser?.image ||
     `https://api.dicebear.com/7.x/initials/png?seed=${encodeURIComponent(
-      session?.user?.name || "User"
+      currentUser?.name || "User"
     )}`;
 
-  /* ---------- close dropdown on outside click / Escape ---------- */
+  /* Close dropdown when clicking outside */
   useEffect(() => {
-    function onMouseDown(event) {
+    function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setProfileOpen(false);
       }
     }
-    function onKeyDown(event) {
-      if (event.key === "Escape") {
-        setProfileOpen(false);
-        setSidebarOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", onMouseDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", onMouseDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  /* ---------- close menus when the page changes ---------- */
+  /* Close menus on route change */
   useEffect(() => {
     setProfileOpen(false);
     setSidebarOpen(false);
   }, [pathname]);
 
-  /* ---------- lock page scroll while the mobile drawer is open ---------- */
-  useEffect(() => {
-    document.body.style.overflow = sidebarOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [sidebarOpen]);
-
-  /* ---------- load cart + live order once the user is logged in ---------- */
+  /* Load cart */
   useEffect(() => {
     if (status !== "authenticated") return;
+    let cancelled = false;
 
     fetch("/api/cart/get", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     })
       .then((res) => res.json())
-      .then((data) => setCart(data.cart || []))
+      .then((data) => {
+        if (!cancelled) setCart(data.cart || []);
+      })
       .catch((err) => console.error("Cart load error:", err));
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
+
+  /* Load live order */
+  useEffect(() => {
+    if (status !== "authenticated") return;
+    let cancelled = false;
 
     fetch("/api/order/live")
       .then((res) => res.json())
-      .then((data) => setLiveOrder(data.order))
-      .catch((err) => console.error("Live order load error:", err));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      .then((data) => {
+        if (!cancelled) setLiveOrder(data.order);
+      })
+      .catch((err) => console.error("Live order error:", err));
+
+    return () => {
+      cancelled = true;
+    };
   }, [status]);
 
   const handleLogout = async () => {
@@ -113,52 +121,19 @@ export default function DashboardNavbar() {
     }
   };
 
-  const isActive = (href) =>
-    href === "/dashboard"
-      ? pathname === href
-      : pathname === href || pathname?.startsWith(`${href}/`);
-
-  /* ---------- link lists ---------- */
-  const desktopLinks = [
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/market", label: "Market" },
-    ...(authed && hasLiveOrder
-      ? [{ href: "/track-order", label: "Track Order" }]
-      : []),
-    ...(authed ? [{ href: "/my-orders", label: "My Orders" }] : []),
-    { href: "/contact", label: "Contact" },
-    ...(isAdmin ? [{ href: "/admin", label: "Admin" }] : []),
-  ];
-
-  const mobileLinks = [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/dashboard/today", label: "Today's Activity", icon: Activity },
-    { href: "/dashboard/workout", label: "AI Fitness Coach", icon: Dumbbell },
-    { href: "/dashboard/nutrition", label: "Nutrition", icon: Utensils },
-    { href: "/dashboard/coach", label: "AI Coach Chat", icon: MessageCircle },
-    { href: "/dashboard/insights", label: "AI Insights", icon: Sparkles },
-    { href: "/market", label: "Market", icon: Store },
-    ...(authed && hasLiveOrder
-      ? [{ href: "/track-order", label: "Track Order", icon: Truck }]
-      : []),
-    ...(authed ? [{ href: "/my-orders", label: "My Orders", icon: Package }] : []),
-    { href: "/contact", label: "Contact", icon: Phone },
-    ...(isAdmin ? [{ href: "/admin", label: "Admin Panel", icon: ShieldCheck }] : []),
-  ];
-
   return (
     <>
       {/* =====================================================
           HEADER
       ===================================================== */}
       <header className="sticky top-0 z-50 border-b border-[#dce8e1] bg-[#f7faf8]/90 backdrop-blur-xl">
-        <div className="mx-auto flex h-[68px] max-w-7xl items-center px-4 sm:px-6 lg:px-8">
-          {/* Left: hamburger + logo */}
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-8 md:h-[72px]">
+          {/* LEFT: hamburger + logo */}
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-[#315047] transition-colors hover:bg-[#e5efe9] lg:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-[#315047] transition hover:bg-[#e5efe9] md:hidden"
               aria-label="Open navigation"
             >
               <Menu size={22} />
@@ -168,7 +143,7 @@ export default function DashboardNavbar() {
               <img
                 src="/icon.png"
                 alt="FitSync logo"
-                className="h-10 w-auto sm:h-11"
+                className="h-10 w-auto md:h-11"
               />
               <span className="text-lg font-bold tracking-tight text-[#173d30]">
                 FitSync
@@ -176,52 +151,79 @@ export default function DashboardNavbar() {
             </Link>
           </div>
 
-          {/* Center: desktop tabs */}
-          <nav
-            aria-label="Main"
-            className="ml-8 hidden flex-1 items-center gap-1 lg:flex"
-          >
-            {desktopLinks.map((link) => (
-              <DesktopLink
-                key={link.href}
-                href={link.href}
-                label={link.label}
-                active={isActive(link.href)}
+          {/* CENTER: desktop tabs */}
+          <nav className="hidden flex-1 items-center justify-center md:flex">
+            <div className="flex items-center gap-1 lg:gap-2">
+              <DesktopNavItem
+                href="/dashboard"
+                label="Dashboard"
+                active={isActive(pathname, "/dashboard")}
               />
-            ))}
+              <DesktopNavItem
+                href="/market"
+                label="Market"
+                active={isActive(pathname, "/market")}
+              />
+
+              {isLoggedIn && hasLiveOrder && (
+                <DesktopNavItem
+                  href="/track-order"
+                  label="Track Order"
+                  active={isActive(pathname, "/track-order")}
+                  dot
+                />
+              )}
+
+              {isLoggedIn && (
+                <DesktopNavItem
+                  href="/my-orders"
+                  label="My Orders"
+                  active={isActive(pathname, "/my-orders")}
+                />
+              )}
+
+              <DesktopNavItem
+                href="/contact"
+                label="Contact"
+                active={isActive(pathname, "/contact")}
+              />
+
+              {isAdminUser && (
+                <DesktopNavItem
+                  href="/admin"
+                  label="Admin"
+                  active={isActive(pathname, "/admin")}
+                  icon={<Shield size={15} />}
+                />
+              )}
+            </div>
           </nav>
 
-          {/* Right: cart + profile / login */}
-          <div className="ml-auto flex items-center gap-2 sm:gap-3">
-            {authed && (
+          {/* RIGHT: cart + profile / login */}
+          <div className="flex items-center gap-3 sm:gap-4">
+            {isLoggedIn && (
               <SmartLink href="/Cart">
-                <span
+                <div
                   id="cart-icon"
-                  aria-label={`Cart, ${cartCount} items`}
-                  className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#315047] transition-colors hover:bg-[#e5efe9]"
+                  className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#315047] transition hover:bg-[#e5efe9]"
+                  aria-label="Cart"
                 >
-                  <span
-                    className={`inline-flex transition-transform duration-300 ${
-                      animateCart ? "-translate-y-0.5 scale-125" : ""
+                  <ShoppingCart
+                    size={22}
+                    className={`transition-transform duration-300 ${
+                      animateCart ? "-translate-y-1 scale-125" : "scale-100"
                     }`}
-                  >
-                    <ShoppingCart size={22} />
-                  </span>
-
+                  />
                   {cartCount > 0 && (
-                    <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-bold leading-none text-white">
-                      {cartCount > 99 ? "99+" : cartCount}
+                    <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-bold text-white">
+                      {cartCount}
                     </span>
                   )}
-                </span>
+                </div>
               </SmartLink>
             )}
 
-            {status === "loading" && (
-              <div className="h-10 w-10 animate-pulse rounded-full bg-[#e5efe9]" />
-            )}
-
-            {authed && (
+            {isLoggedIn && (
               <div ref={dropdownRef} className="relative">
                 <button
                   type="button"
@@ -229,15 +231,13 @@ export default function DashboardNavbar() {
                   aria-haspopup="menu"
                   aria-expanded={profileOpen}
                   aria-label="Open profile menu"
-                  className={`flex rounded-full ring-2 transition focus:outline-none focus-visible:ring-[#397054] ${
-                    profileOpen
-                      ? "ring-[#397054]"
-                      : "ring-transparent hover:ring-[#b9d6c6]"
-                  }`}
+                  className="flex rounded-full ring-2 ring-transparent transition hover:ring-[#b9d8c6] focus:outline-none focus-visible:ring-[#397054]"
                 >
                   <img
                     src={avatarSrc}
                     alt="Profile"
+                    width={40}
+                    height={40}
                     referrerPolicy="no-referrer"
                     className="h-10 w-10 rounded-full object-cover"
                   />
@@ -246,28 +246,30 @@ export default function DashboardNavbar() {
                 {profileOpen && (
                   <div
                     role="menu"
-                    className="absolute right-0 top-full z-50 mt-3 w-64 overflow-hidden rounded-2xl border border-[#dfe9e3] bg-white p-2 shadow-xl"
+                    className="absolute right-0 top-12 z-50 w-64 overflow-hidden rounded-2xl border border-[#dfe9e3] bg-white p-2 shadow-xl"
                   >
-                    <div className="border-b border-[#edf1ee] px-3 pb-3 pt-2">
+                    <div className="border-b border-[#edf1ee] px-3 py-3">
                       <p className="truncate text-sm font-bold text-[#24483a]">
-                        {session?.user?.name || "FitSync User"}
+                        {currentUser?.name || "FitSync User"}
                       </p>
-                      <p className="mt-0.5 truncate text-xs text-[#6b7d75]">
-                        {session?.user?.email}
+                      <p className="mt-0.5 truncate text-xs text-[#82918a]">
+                        {currentUser?.email || ""}
                       </p>
                     </div>
 
                     <div className="py-1">
-                      <MenuLink
+                      <DropdownLink
                         href="/my-orders"
                         icon={<Package size={17} />}
                         label="My Orders"
+                        onClick={() => setProfileOpen(false)}
                       />
-                      {isAdmin && (
-                        <MenuLink
+                      {isAdminUser && (
+                        <DropdownLink
                           href="/admin"
-                          icon={<ShieldCheck size={17} />}
+                          icon={<Shield size={17} />}
                           label="Admin Panel"
+                          onClick={() => setProfileOpen(false)}
                         />
                       )}
                     </div>
@@ -275,10 +277,9 @@ export default function DashboardNavbar() {
                     <div className="border-t border-[#edf1ee] pt-1">
                       <button
                         type="button"
-                        role="menuitem"
                         onClick={handleLogout}
                         disabled={loggingOut}
-                        className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
+                        className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-50"
                       >
                         <LogOut size={17} />
                         {loggingOut ? "Signing out..." : "Sign out"}
@@ -291,7 +292,8 @@ export default function DashboardNavbar() {
 
             {status === "unauthenticated" && (
               <SmartLink href="/login">
-                <span className="inline-flex items-center rounded-xl bg-[#173d30] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#245543]">
+                <span className="inline-flex items-center gap-2 rounded-xl bg-[#173d30] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#245543]">
+                  <LogIn size={16} />
                   Login
                 </span>
               </SmartLink>
@@ -301,89 +303,189 @@ export default function DashboardNavbar() {
       </header>
 
       {/* =====================================================
-          MOBILE DRAWER
+          MOBILE SIDEBAR OVERLAY
       ===================================================== */}
-      <div
-        onClick={() => setSidebarOpen(false)}
-        className={`fixed inset-0 z-[100] bg-black/40 transition-opacity duration-300 lg:hidden ${
-          sidebarOpen ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
-      />
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
+      {/* =====================================================
+          MOBILE SIDEBAR
+      ===================================================== */}
       <aside
         aria-hidden={!sidebarOpen}
-        className={`fixed left-0 top-0 z-[110] flex h-full w-[285px] flex-col bg-white shadow-2xl transition-[transform,visibility] duration-300 lg:hidden ${
-          sidebarOpen ? "visible translate-x-0" : "invisible -translate-x-full"
+        className={`fixed left-0 top-0 z-[110] flex h-full w-[285px] flex-col bg-white shadow-2xl transition-transform duration-300 md:hidden ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex h-[68px] items-center justify-between border-b border-[#e4ebe7] px-5">
+        {/* Sidebar header */}
+        <div className="flex h-16 items-center justify-between border-b border-[#e4ebe7] px-5">
           <Link
             href="/dashboard"
             onClick={() => setSidebarOpen(false)}
-            className="flex items-center gap-2.5"
+            className="flex items-center gap-3"
           >
-            <img src="/icon.png" alt="FitSync logo" className="h-9 w-auto" />
-            <span className="text-lg font-bold tracking-tight text-[#173d30]">
-              FitSync
-            </span>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#173d30] font-bold text-white">
+              F
+            </div>
+            <span className="text-lg font-bold text-[#173d30]">FitSync</span>
           </Link>
 
           <button
             type="button"
             onClick={() => setSidebarOpen(false)}
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-[#53665e] transition-colors hover:bg-[#edf6f0]"
+            className="flex h-9 w-9 items-center justify-center rounded-xl text-[#53665e] hover:bg-[#edf6f0]"
             aria-label="Close navigation"
           >
             <X size={20} />
           </button>
         </div>
 
+        {/* Navigation */}
         <nav className="flex-1 space-y-1 overflow-y-auto p-4">
-          {mobileLinks.map(({ href, label, icon: Icon }) => (
+          <MobileNavItem
+            href="/dashboard"
+            icon={<LayoutDashboard size={19} />}
+            label="Dashboard"
+            active={isActive(pathname, "/dashboard")}
+            onClick={() => setSidebarOpen(false)}
+          />
+          <MobileNavItem
+            href="/dashboard/today"
+            icon={<Activity size={19} />}
+            label="Today's Activity"
+            active={isActive(pathname, "/dashboard/today")}
+            onClick={() => setSidebarOpen(false)}
+          />
+          <MobileNavItem
+            href="/dashboard/workout"
+            icon={<Dumbbell size={19} />}
+            label="AI Fitness Coach"
+            active={isActive(pathname, "/dashboard/workout")}
+            onClick={() => setSidebarOpen(false)}
+          />
+          <MobileNavItem
+            href="/dashboard/nutrition"
+            icon={<Utensils size={19} />}
+            label="Nutrition"
+            active={isActive(pathname, "/dashboard/nutrition")}
+            onClick={() => setSidebarOpen(false)}
+          />
+          <MobileNavItem
+            href="/dashboard/coach"
+            icon={<Sparkles size={19} />}
+            label="AI Coach Chat"
+            active={isActive(pathname, "/dashboard/coach")}
+            onClick={() => setSidebarOpen(false)}
+          />
+          <MobileNavItem
+            href="/dashboard/insights"
+            icon={<Sparkles size={19} />}
+            label="AI Insights"
+            active={isActive(pathname, "/dashboard/insights")}
+            onClick={() => setSidebarOpen(false)}
+          />
+          <MobileNavItem
+            href="/market"
+            icon={<ShoppingBag size={19} />}
+            label="Market"
+            active={isActive(pathname, "/market")}
+            onClick={() => setSidebarOpen(false)}
+          />
+
+          {isLoggedIn && hasLiveOrder && (
             <MobileNavItem
-              key={href}
-              href={href}
-              label={label}
-              icon={<Icon size={19} />}
-              active={isActive(href)}
+              href="/track-order"
+              icon={<Truck size={19} />}
+              label="Track Order"
+              active={isActive(pathname, "/track-order")}
               onClick={() => setSidebarOpen(false)}
             />
-          ))}
+          )}
+
+          {isLoggedIn && (
+            <MobileNavItem
+              href="/my-orders"
+              icon={<Package size={19} />}
+              label="My Orders"
+              active={isActive(pathname, "/my-orders")}
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
+
+          <MobileNavItem
+            href="/contact"
+            icon={<Phone size={19} />}
+            label="Contact"
+            active={isActive(pathname, "/contact")}
+            onClick={() => setSidebarOpen(false)}
+          />
+
+          {isAdminUser && (
+            <MobileNavItem
+              href="/admin"
+              icon={<Shield size={19} />}
+              label="Admin"
+              active={isActive(pathname, "/admin")}
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
         </nav>
+
+        {status === "unauthenticated" && (
+          <div className="border-t border-[#e4ebe7] p-4">
+            <Link
+              href="/login"
+              onClick={() => setSidebarOpen(false)}
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#173d30] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#245543]"
+            >
+              <LogIn size={18} />
+              Login
+            </Link>
+          </div>
+        )}
       </aside>
     </>
   );
 }
 
 /* =========================================================
-   DESKTOP TAB
+   DESKTOP NAV ITEM
 ========================================================= */
-function DesktopLink({ href, label, active }) {
+
+function DesktopNavItem({ href, label, active, icon, dot }) {
   return (
     <SmartLink href={href}>
       <span
-        aria-current={active ? "page" : undefined}
-        className={`inline-flex items-center rounded-xl px-4 py-2 text-sm font-semibold transition-colors duration-200 ${
+        className={`inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-semibold transition-colors duration-200 ${
           active
-            ? "bg-[#173d30] text-white"
-            : "text-[#4a635a] hover:bg-[#e5efe9] hover:text-[#173d30]"
+            ? "bg-[#e3f0e8] text-[#173d30]"
+            : "text-[#4a5f56] hover:bg-[#edf6f0] hover:text-[#173d30]"
         }`}
       >
+        {icon}
         {label}
+        {dot && (
+          <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+        )}
       </span>
     </SmartLink>
   );
 }
 
 /* =========================================================
-   PROFILE DROPDOWN ITEM
+   PROFILE DROPDOWN LINK
 ========================================================= */
-function MenuLink({ href, icon, label }) {
+
+function DropdownLink({ href, icon, label, onClick }) {
   return (
     <Link
       href={href}
-      role="menuitem"
-      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[#3f574d] transition-colors hover:bg-[#edf6f0] hover:text-[#173d30]"
+      onClick={onClick}
+      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[#53665e] transition hover:bg-[#edf6f0] hover:text-[#245543]"
     >
       {icon}
       {label}
@@ -392,18 +494,18 @@ function MenuLink({ href, icon, label }) {
 }
 
 /* =========================================================
-   MOBILE DRAWER ITEM
+   MOBILE NAV ITEM
 ========================================================= */
-function MobileNavItem({ href, icon, label, active, onClick }) {
+
+function MobileNavItem({ href, icon, label, onClick, active }) {
   return (
     <Link
       href={href}
       onClick={onClick}
-      aria-current={active ? "page" : undefined}
-      className={`flex items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-semibold transition-colors ${
+      className={`flex items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-semibold transition ${
         active
-          ? "bg-[#173d30] text-white"
-          : "text-[#3f574d] hover:bg-[#edf6f0] hover:text-[#173d30]"
+          ? "bg-[#e3f0e8] text-[#173d30]"
+          : "text-[#53665e] hover:bg-[#edf6f0] hover:text-[#245543]"
       }`}
     >
       {icon}
