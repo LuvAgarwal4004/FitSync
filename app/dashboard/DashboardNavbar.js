@@ -145,9 +145,9 @@ export default function DashboardNavbar({ user }) {
                 alt="NutriFit logo"
                 className="h-10 w-auto md:h-11"
               />
-              <span className="text-lg font-bold tracking-tight text-[#173d30]">
+              {/* <span className="text-lg font-bold tracking-tight text-[#173d30]">
                 NutriFit
-              </span>
+              </span> */}
             </Link>
           </div>
 
@@ -328,9 +328,9 @@ export default function DashboardNavbar({ user }) {
             onClick={() => setSidebarOpen(false)}
             className="flex items-center gap-3"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#173d30] font-bold text-white">
+            {/* <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#173d30] font-bold text-white">
               F
-            </div>
+            </div> */}
             <span className="text-lg font-bold text-[#173d30]">NutriFit</span>
           </Link>
 
