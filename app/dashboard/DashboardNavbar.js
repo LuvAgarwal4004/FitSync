@@ -164,7 +164,7 @@ transition
             gap-3 rounded-2xl px-2 py-1.5 transition hover:bg-[#eaf2ed]"
           > */}
 
-            {/* <div className="hidden text-right sm:block">
+          {/* <div className="hidden text-right sm:block">
 
               <p className="text-sm font-bold text-[#24483a]">
                 {user?.name || "FitSync User"}
@@ -176,7 +176,7 @@ transition
 
             </div> */}
 
-            {/* <div className="flex h-10 w-10 items-center justify-center
+          {/* <div className="flex h-10 w-10 items-center justify-center
              rounded-full bg-[#dceee3] font-bold text-[#397054]">
               {firstLetter}
             </div>
@@ -195,9 +195,9 @@ transition
             ================================================= */}
 
           {/* {profileOpen && ( */}
-            {/* <div className="absolute right-0 top-14 z-50 w-64 overflow-hidden rounded-2xl border border-[#dfe9e3] bg-white p-2 shadow-xl"> */}
+          {/* <div className="absolute right-0 top-14 z-50 w-64 overflow-hidden rounded-2xl border border-[#dfe9e3] bg-white p-2 shadow-xl"> */}
 
-              {/* <div className="border-b border-[#edf1ee] px-4 py-3">
+          {/* <div className="border-b border-[#edf1ee] px-4 py-3">
 
                 <p className="text-sm font-bold text-[#24483a]">
                   {user?.name || "FitSync User"}
@@ -227,7 +227,7 @@ transition
                   My Profile
                 </Link> */}
 
-              {/* <button
+          {/* <button
                 type="button"
                 onClick={handleLogout}
                 disabled={loggingOut}
@@ -239,9 +239,9 @@ transition
                   ? "Logging out..."
                   : "Logout"}
               </button>  */}
-              
 
-            {/* </div> */}
+
+          {/* </div> */}
           {/* )} */}
 
           {/* </div> */}
@@ -263,6 +263,19 @@ duration-300
 hover:bg-cyan-500/10
 hover:text-cyan-400
 ">Dashbaord</span></SmartLink>
+                <SmartLink href="/market"> <span aria-current="page"
+                  className="
+rounded-xl
+px-4
+py-2
+text-sm
+font-medium
+text-gray-300
+transition
+duration-300
+hover:bg-cyan-500/10
+hover:text-cyan-400
+">Market</span></SmartLink>
                 {session && (<>
                   {liveOrder?.length > 0 && (
                     <SmartLink href="/track-order">
@@ -522,6 +535,12 @@ hover:text-cyan-400
             label="AI Insights"
             onClick={() => setSidebarOpen(false)}
           />
+          <MobileNavItem
+            href="/market"
+            icon={<Sparkles size={19} />}
+            label="Market"
+            onClick={() => setSidebarOpen(false)}
+          />
           {/* <MobileNavItem
             href="/dashboard/progress"
             icon={<TrendingUp size={19} />}
@@ -591,7 +610,7 @@ hover:text-cyan-400
 
         {/* <div className="border-t border-[#e4ebe7] p-4"> */}
 
-          {/* <button
+        {/* <button
             type="button"
             onClick={handleLogout}
             disabled={loggingOut}
