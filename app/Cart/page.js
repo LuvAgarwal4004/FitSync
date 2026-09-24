@@ -47,7 +47,7 @@ const Page = () => {
             if (typeof setGlobalLoading === "function") {
               setGlobalLoading(true);
             }
-            router.push("/");
+            router.push("/market");
           }
           }
           className="mt-6 bg-black text-white px-6 py-2 rounded-lg"
