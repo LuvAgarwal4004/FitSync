@@ -28,7 +28,7 @@ const Page = () => {
                   Email
                 </p>
                 <p className="font-medium break-all">
-                  luvag0707@gmail.com
+                  gupta.amisha2606@gmail.com
                 </p>
               </div>
             </div>
@@ -40,7 +40,7 @@ const Page = () => {
                   Phone
                 </p>
                 <p className="font-medium">
-                  +91 7278717660
+                  +91 7047928701
                 </p>
               </div>
             </div>
@@ -49,7 +49,7 @@ const Page = () => {
               <Clock className="text-yellow-400" size={24} />
               <div>
                 <p className="text-gray-400 text-sm">
-                  Business Hours
+                  Business Hours for NutriFit
                 </p>
                 <p className="font-medium">
                   Monday - Saturday
@@ -71,8 +71,7 @@ const Page = () => {
           </h2>
 
           <p className="text-gray-500 mb-8 leading-7">
-            Whether you have a question about your rent or sells, buys,
-            etc, we're here to help.
+            If you have a question for us, feel free to contact us.
           </p>
 
           <div className="space-y-5">
@@ -89,7 +88,7 @@ const Page = () => {
                   </p>
 
                   <p className="text-gray-500 text-sm break-all">
-                    luvag0707@gmail.com
+                    gupta.amisha2606@gmail.com
                   </p>
                 </div>
 
@@ -109,7 +108,7 @@ const Page = () => {
                   </p>
 
                   <p className="text-gray-500 text-sm">
-                    +91 9874448947
+                    +91 7047928701
                   </p>
                 </div>
 
