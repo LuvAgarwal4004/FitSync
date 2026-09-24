@@ -7,19 +7,27 @@ export default function AddProductPage() {
   const router = useRouter();
 
   const handleSubmit = async (data) => {
-    const res = await fetch("/api/products", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    try {
+      const res = await fetch("/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-    const result = await res.json();
+      const result = await res.json().catch(() => ({}));
 
-    if (res.ok) {
+      if (!res.ok) {
+        toast.error(result.error || "Failed to add product");
+        return;
+      }
+
       toast.success("Product Added 🔥");
       router.push("/admin");
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong");
     }
   };
 
@@ -27,11 +35,8 @@ export default function AddProductPage() {
     <div className="min-h-screen bg-gray-100 px-4 py-8 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-5 sm:p-8">
-
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-800">
-              Add Product
-            </h1>
+            <h1 className="text-3xl font-bold text-gray-800">Add Product</h1>
             <p className="text-gray-500 mt-2">
               Fill in the product details below.
             </p>
