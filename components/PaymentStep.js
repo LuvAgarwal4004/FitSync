@@ -18,6 +18,11 @@ export default function PaymentStep() {
   // } = useCheckout();
 
   const handlePayment = async () => {
+    if (method === "online") {
+      toast.error("Online payment is unavailable because of the surge in orders");
+      return;
+    }
+
     setLoading(true);
     if (typeof setGlobalLoading === "function") {
       setGlobalLoading(true);
@@ -164,29 +169,25 @@ export default function PaymentStep() {
         </div>
       </div>
 
-      {/* ONLINE PAYMENT */}
+      {/* ONLINE PAYMENT - locked */}
 
       <div
-        onClick={() => setMethod("online")}
-        className={`
-        cursor-pointer
+        aria-disabled="true"
+        className="
+        cursor-not-allowed
         rounded-2xl
         border-2
         p-5
         mt-5
-        transition-all
-        duration-300
-
-        ${method === "online"
-            ? "border-black bg-gray-100 shadow-md"
-            : "border-gray-200 hover:border-gray-400 hover:shadow-md"
-          }
-      `}
+        border-gray-200
+        bg-gray-50
+        opacity-60
+      "
       >
         <div className="flex items-start gap-4">
 
           <div
-            className={`
+            className="
             mt-1
             h-5
             w-5
@@ -195,20 +196,14 @@ export default function PaymentStep() {
             flex
             items-center
             justify-center
-            ${method === "online"
-                ? "border-black"
-                : "border-gray-400"
-              }
-          `}
+            border-gray-300
+          "
           >
-            {method === "online" && (
-              <div className="w-2.5 h-2.5 rounded-full bg-black" />
-            )}
           </div>
 
           <div className="flex-1">
 
-            <h3 className="font-semibold text-lg">
+            <h3 className="font-semibold text-lg text-gray-500">
               Online Payment
             </h3>
 
@@ -216,8 +211,8 @@ export default function PaymentStep() {
               Pay securely using UPI, Debit Card, Credit Card or Net Banking.
             </p>
 
-            <span className="inline-block mt-3 text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full">
-              Secure Payment
+            <span className="inline-block mt-3 text-xs bg-red-100 text-red-700 px-3 py-1 rounded-full">
+              Unavailable due to a surge in orders
             </span>
 
           </div>
